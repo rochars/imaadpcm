@@ -23,13 +23,13 @@ const imaadpcm = require("imaadpcm");
 ## Use
 ```javascript
 // Encoding a full file
-let adpcm_samples = imaadpcm.encode(16BitSamples);
+let adpcm_samples = imaadpcm.encode(samples);
 
 // Decoding a full file (256 block align is assumed by default)
-let samples = imaadpcm.decode(4BitSamples);
+let samples = imaadpcm.decode(adpcm_samples);
 
 // Decoding a full file with a different block align (1024)
-samples = imaadpcm.decode(4BitSamples, 1024);
+samples = imaadpcm.decode(adpcm_samples, 1024);
 ```
 
 ## LICENSE
