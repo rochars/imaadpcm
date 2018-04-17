@@ -38,7 +38,7 @@ var decoderPredicted = 0;
 var decoderIndex = 0;
 var decoderStep = 7;
 
-function _encode_sample(sample) {
+function encodeSample(sample) {
     let delta = sample - encoderPredicted;
     let value = 0;
     if (delta >= 0) {
@@ -89,7 +89,7 @@ function _encode_sample(sample) {
 }
 
 function blockHead(sample) {
-    _encode_sample(sample);
+    encodeSample(sample);
     let adpcmSamples = [];
     adpcmSamples.push(byteData.pack(sample, int16)[0]);
     adpcmSamples.push(byteData.pack(sample, int16)[1]);
@@ -104,8 +104,8 @@ function encodeBlock(block) {
     for (let i=1; i<block.length; i++) {
         x++;
         if (x == 1) {
-            let sample2 = _encode_sample(block[i]);
-            let sample = _encode_sample(block[i + 1]);
+            let sample2 = encodeSample(block[i]);
+            let sample = encodeSample(block[i + 1]);
             adpcmSamples.push((sample << 4) | sample2);
         } else {
             x = 0;
