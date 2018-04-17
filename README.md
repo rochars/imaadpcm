@@ -15,21 +15,39 @@ https://wiki.multimedia.cx/index.php/IMA_ADPCM
 npm install imaadpcm
 ```
 
-## Example
-```javascript
-const imaadpcm = require("imaadpcm");
-```
-
 ## Use
+
+For files:
 ```javascript
-// Encoding a full file
+
+const imaadpcm = require("imaadpcm");
+
+// Compressing all the samples in a file
 adpcm_samples = imaadpcm.encode(samples);
 
-// Decoding a full file (256 block align is assumed by default)
+// Decompressing all the samples in a file
+// 256 block align is assumed by default
 samples = imaadpcm.decode(adpcm_samples);
 
-// Decoding a full file with a different block align (1024)
+// Decompressig all the samples in a file
+// Using a different block align (1024)
 samples = imaadpcm.decode(adpcm_samples, 1024);
+```
+
+For streaming:
+```javascript
+
+const imaadpcm = require("imaadpcm");
+
+// Decompressing, blocks of 256 bytes assumed by default:
+samples = imaadpcm.decodeBlock(adpcm_block);
+
+// Decompressing using a different block size:
+samples = imaadpcm.decodeBlock(adpcm_block, 1024);
+
+// Compressing, only blocks of 505 samples
+adpcm_samples = imaadpcm.encodeBlock(sample_block);
+
 ```
 
 ## LICENSE
