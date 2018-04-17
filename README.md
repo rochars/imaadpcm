@@ -23,6 +23,7 @@ For files:
 const imaadpcm = require("imaadpcm");
 
 // Compressing all the samples in a file
+// Only 16-bit samples are supported
 adpcm_samples = imaadpcm.encode(samples);
 
 // Decompressing all the samples in a file
@@ -39,13 +40,14 @@ For streaming:
 
 const imaadpcm = require("imaadpcm");
 
-// Decompressing, blocks of 256 bytes assumed by default:
+// Decompressing, blocks of 256 bytes assumed by default
 samples = imaadpcm.decodeBlock(adpcm_block);
 
-// Decompressing using a different block size:
+// Decompressing using a different block size
 samples = imaadpcm.decodeBlock(adpcm_block, 1024);
 
 // Compressing, only blocks of 505 samples
+// Only 16-bit samples are supported
 adpcm_samples = imaadpcm.encodeBlock(sample_block);
 
 ```

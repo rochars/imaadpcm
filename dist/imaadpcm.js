@@ -313,6 +313,7 @@ module.exports = Type;
  * http://www.cs.columbia.edu/~hgs/audio/dvi/
  * https://github.com/acida/pyima
  * https://wiki.multimedia.cx/index.php/IMA_ADPCM
+ * 
  */
 
 const byteData = __webpack_require__(2);
@@ -343,6 +344,11 @@ var decoderPredicted = 0;
 var decoderIndex = 0;
 var decoderStep = 7;
 
+/**
+ * Compress a 16-bit PCM sample into a 4-bit ADPCM sample.
+ * @param {number} sample The sample.
+ * @return {number}
+ */
 function encodeSample(sample) {
     let delta = sample - encoderPredicted;
     let value = 0;
@@ -393,6 +399,11 @@ function encodeSample(sample) {
     return value;
 }
 
+/**
+ * Return the head of a ADPCM sample block.
+ * @param {number} sample The first sample of the block.
+ * @return {!Array<number>}
+ */
 function blockHead(sample) {
     encodeSample(sample);
     let adpcmSamples = [];
@@ -403,6 +414,11 @@ function blockHead(sample) {
     return adpcmSamples;
 }
 
+/**
+ * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
+ * @param {!Array<number>} block A sample block of 505 samples.
+ * @return {!Array<number>}
+ */
 function encodeBlock(block) {
     let adpcmSamples = blockHead(block[0]);
     let x = 0;
@@ -422,19 +438,24 @@ function encodeBlock(block) {
     return adpcmSamples;
 }
 
-function decodeSample(neeble) {
+/**
+ * Decode a 4-bit ADPCM sample into a 16-bit PCM sample.
+ * @param {number} nibble A 4-bit adpcm sample.
+ * @return {number}
+ */
+function decodeSample(nibble) {
     let difference = 0;
-    if (neeble & 4) {
+    if (nibble & 4) {
         difference += decoderStep;
     }
-    if (neeble & 2) {
+    if (nibble & 2) {
         difference += decoderStep >> 1;
     }
-    if (neeble & 1) {
+    if (nibble & 1) {
         difference += decoderStep >> 2;
     }
     difference += decoderStep >> 3;
-    if (neeble & 8) {
+    if (nibble & 8) {
         difference = -difference;
     }
     decoderPredicted += difference;
@@ -443,7 +464,7 @@ function decodeSample(neeble) {
     } else if (decoderPredicted < -32767) {
         decoderPredicted = -32767;
     }
-    decoderIndex += indexTable[neeble];
+    decoderIndex += indexTable[nibble];
     if (decoderIndex < 0) {
         decoderIndex = 0;
     } else if (decoderIndex > 88) {
@@ -453,6 +474,11 @@ function decodeSample(neeble) {
     return decoderPredicted;
 }
 
+/**
+ * Decode a block of 256 ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} block A adpcm sample block of 256 samples.
+ * @return {!Array<number>}
+ */
 function decodeBlock(block) {
     decoderPredicted = byteData.unpack([block[0], block[1]], int16);
     decoderIndex = block[2];
@@ -468,6 +494,11 @@ function decodeBlock(block) {
     return result;
 }
 
+/**
+ * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
+ * @param {!Array<number>} samples A array of samples.
+ * @return {!Array<number>}
+ */
 function encode(samples) {
     let adpcmSamples = [];
     let block = [];
@@ -485,6 +516,12 @@ function encode(samples) {
     return adpcmSamples;
 }
 
+/**
+ * Decode IMA ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
+ * @param {number} blockAlign The block size.
+ * @return {!Array<number>}
+ */
 function decode(adpcmSamples, blockAlign=256) {
     let samples = [];
     let block = [];
