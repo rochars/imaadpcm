@@ -1,6 +1,6 @@
 {
   "name": "imaadpcm",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "JavaScript IMA ADPCM codec.",
   "homepage": "https://github.com/rochars/imaadpcm",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -10,7 +10,9 @@
     "ima",
     "adpcm",
     "audio",
-    "codec"
+    "codec",
+    "encode",
+    "decode"
   ],
   "repository": {
     "type": "git",
