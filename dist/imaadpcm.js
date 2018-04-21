@@ -526,10 +526,10 @@ function decode(adpcmSamples, blockAlign=256) {
     return samples;
 }
 
-module.exports.encode = encode;
-module.exports.decode = decode;
-module.exports.encodeBlock = encodeBlock;
-module.exports.decodeBlock = decodeBlock;
+window['imaadpcm'] = window['imaadpcm'] ? window['imaadpcm'] : {};window['imaadpcm']['encode'] = encode;
+window['imaadpcm']['decode'] = decode;
+window['imaadpcm']['encodeBlock'] = encodeBlock;
+window['imaadpcm']['decodeBlock'] = decodeBlock;
 
 
 /***/ }),

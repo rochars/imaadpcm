@@ -52,6 +52,18 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 
 ```
 
+## In the browser
+
+```html
+<script src="dist/imaadpcm-min.js"></script>
+<script>
+    sample = imaadpcm.encode(sample);
+    sample = imaadpcm.decode(sample);
+    samples = imaadpcm.encodeBlock(samples);
+    samples = imaadpcm.decodeBlock(samples);
+</script>
+```
+
 ## LICENSE
 Copyright (c) 2018 Rafael da Silva Rocha.
 
