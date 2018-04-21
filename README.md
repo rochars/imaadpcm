@@ -57,10 +57,10 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 ```html
 <script src="dist/imaadpcm-min.js"></script>
 <script>
-    sample = imaadpcm.encode(sample);
-    sample = imaadpcm.decode(sample);
-    samples = imaadpcm.encodeBlock(samples);
-    samples = imaadpcm.decodeBlock(samples);
+    adpcmSamples = imaadpcm.encode(pcmSamples);
+    pcmSamples = imaadpcm.decode(adpcmSamples);
+    adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
+    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
 </script>
 ```
 
