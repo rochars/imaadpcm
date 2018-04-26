@@ -44,12 +44,12 @@ var decoderStep_ = 7;
 
 /**
  * Sign a 16-bit integer.
- * @param {number} A 16-bit integer.
+ * @param {number} num A 16-bit integer.
  * @return {number}
  * @private
  */
-function sign_(number) {
-    return number > 32768 ? number - 65536 : number;
+function sign_(num) {
+    return num > 32768 ? num - 65536 : num;
 }
 
 /**
