@@ -5,10 +5,10 @@ https://github.com/rochars/imaadpcm
 
 References:  
 http://www.cs.columbia.edu/~hgs/audio/dvi/  
-https://github.com/acida/pyima  
-https://wiki.multimedia.cx/index.php/IMA_ADPCM
+https://github.com/acida/pyima
 
-[![NPM version](https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge)](https://www.npmjs.com/package/imaadpcm) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/imaadpcm/index.html)
+[![NPM version](https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge)](https://www.npmjs.com/package/imaadpcm) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/imaadpcm/index.html)  
+[![Codecov](https://img.shields.io/codecov/c/github/rochars/imaadpcm.svg?style=flat-square)](https://codecov.io/gh/rochars/imaadpcm) [![Unix Build](https://img.shields.io/travis/rochars/imaadpcm.svg?style=flat-square)](https://travis-ci.org/rochars/imaadpcm) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/imaadpcm.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/imaadpcm) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/imaadpcm.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/imaadpcm/)
 
 ## Install
 ```
@@ -16,8 +16,7 @@ npm install imaadpcm
 ```
 
 ## Use
-
-For files:
+Files:
 ```javascript
 
 const imaadpcm = require("imaadpcm");
@@ -35,7 +34,7 @@ samples = imaadpcm.decode(adpcm_samples);
 samples = imaadpcm.decode(adpcm_samples, 1024);
 ```
 
-For streaming:
+Streaming:
 ```javascript
 
 const imaadpcm = require("imaadpcm");
@@ -53,7 +52,6 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 ```
 
 ## In the browser
-
 ```html
 <script src="dist/imaadpcm-min.js"></script>
 <script>

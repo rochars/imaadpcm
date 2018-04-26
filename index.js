@@ -11,14 +11,12 @@
  * 
  */
 
-const byteData = require("byte-data");
-const int16 = byteData.int16;
-
-var indexTable = [
+/** @private */
+const INDEX_TABLE = [
     -1, -1, -1, -1, 2, 4, 6, 8,
     -1, -1, -1, -1, 2, 4, 6, 8];
-
-var stepTable = [
+/** @private */
+const STEP_TABLE = [
     7, 8, 9, 10, 11, 12, 13, 14,
     16, 17, 19, 21, 23, 25, 28, 31,
     34, 37, 41, 45, 50, 55, 60, 66,
@@ -31,21 +29,37 @@ var stepTable = [
     7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899,
     15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794,
     32767];
+/** @private */
+var encoderPredicted_ = 0;
+/** @private */
+var encoderIndex_ = 0;
+/** @private */
+var encoderStep_ = 7;
+/** @private */
+var decoderPredicted_ = 0;
+/** @private */
+var decoderIndex_ = 0;
+/** @private */
+var decoderStep_ = 7;
 
-var encoderPredicted = 0;
-var encoderIndex = 0;
-var encoderStep = 7;
-var decoderPredicted = 0;
-var decoderIndex = 0;
-var decoderStep = 7;
+/**
+ * Sign a 16-bit integer.
+ * @param {number} A 16-bit integer.
+ * @return {number}
+ * @private
+ */
+function sign_(number) {
+    return number > 32768 ? number - 65536 : number;
+}
 
 /**
  * Compress a 16-bit PCM sample into a 4-bit ADPCM sample.
  * @param {number} sample The sample.
  * @return {number}
+ * @private
  */
-function encodeSample(sample) {
-    let delta = sample - encoderPredicted;
+function encodeSample_(sample) {
+    let delta = sample - encoderPredicted_;
     let value = 0;
     if (delta >= 0) {
         value = 0;
@@ -54,7 +68,7 @@ function encodeSample(sample) {
         value = 8;
         delta = -delta;
     }
-    let step = stepTable[encoderIndex];
+    let step = STEP_TABLE[encoderIndex_];
     let diff = step >> 3;
     if (delta > step) {
         value |= 4;
@@ -73,21 +87,21 @@ function encodeSample(sample) {
         diff += step;
     }
     if (value & 8) {
-        encoderPredicted -= diff;
+        encoderPredicted_ -= diff;
     }
     else {
-        encoderPredicted += diff;
+        encoderPredicted_ += diff;
     }
-    if (encoderPredicted < -0x8000) {
-        encoderPredicted = -0x8000;
-    } else if (encoderPredicted > 0x7fff) {
-        encoderPredicted = 0x7fff;
+    if (encoderPredicted_ < -0x8000) {
+        encoderPredicted_ = -0x8000;
+    } else if (encoderPredicted_ > 0x7fff) {
+        encoderPredicted_ = 0x7fff;
     }
-    encoderIndex += indexTable[value & 7];
-    if (encoderIndex < 0) {
-        encoderIndex = 0;
-    } else if (encoderIndex > 88) {
-        encoderIndex = 88;
+    encoderIndex_ += INDEX_TABLE[value & 7];
+    if (encoderIndex_ < 0) {
+        encoderIndex_ = 0;
+    } else if (encoderIndex_ > 88) {
+        encoderIndex_ = 88;
     }
     return value;
 }
@@ -96,36 +110,37 @@ function encodeSample(sample) {
  * Decode a 4-bit ADPCM sample into a 16-bit PCM sample.
  * @param {number} nibble A 4-bit adpcm sample.
  * @return {number}
+ * @private
  */
-function decodeSample(nibble) {
+function decodeSample_(nibble) {
     let difference = 0;
     if (nibble & 4) {
-        difference += decoderStep;
+        difference += decoderStep_;
     }
     if (nibble & 2) {
-        difference += decoderStep >> 1;
+        difference += decoderStep_ >> 1;
     }
     if (nibble & 1) {
-        difference += decoderStep >> 2;
+        difference += decoderStep_ >> 2;
     }
-    difference += decoderStep >> 3;
+    difference += decoderStep_ >> 3;
     if (nibble & 8) {
         difference = -difference;
     }
-    decoderPredicted += difference;
-    if (decoderPredicted > 32767) {
-        decoderPredicted = 32767;
-    } else if (decoderPredicted < -32767) {
-        decoderPredicted = -32767;
+    decoderPredicted_ += difference;
+    if (decoderPredicted_ > 32767) {
+        decoderPredicted_ = 32767;
+    } else if (decoderPredicted_ < -32767) {
+        decoderPredicted_ = -32767;
     }
-    decoderIndex += indexTable[nibble];
-    if (decoderIndex < 0) {
-        decoderIndex = 0;
-    } else if (decoderIndex > 88) {
-        decoderIndex = 88;
+    decoderIndex_ += INDEX_TABLE[nibble];
+    if (decoderIndex_ < 0) {
+        decoderIndex_ = 0;
+    } else if (decoderIndex_ > 88) {
+        decoderIndex_ = 88;
     }
-    decoderStep = stepTable[decoderIndex];
-    return decoderPredicted;
+    decoderStep_ = STEP_TABLE[decoderIndex_];
+    return decoderPredicted_;
 }
 
 /**
@@ -133,12 +148,12 @@ function decodeSample(nibble) {
  * @param {number} sample The first sample of the block.
  * @return {!Array<number>}
  */
-function blockHead(sample) {
-    encodeSample(sample);
+function blockHead_(sample) {
+    encodeSample_(sample);
     let adpcmSamples = [];
-    adpcmSamples.push(byteData.pack(sample, int16)[0]);
-    adpcmSamples.push(byteData.pack(sample, int16)[1]);
-    adpcmSamples.push(encoderIndex);
+    adpcmSamples.push(sample & 0xFF);
+    adpcmSamples.push((sample >> 8) & 0xFF);
+    adpcmSamples.push(encoderIndex_);
     adpcmSamples.push(0);
     return adpcmSamples;
 }
@@ -149,10 +164,10 @@ function blockHead(sample) {
  * @return {!Array<number>}
  */
 function encodeBlock(block) {
-    let adpcmSamples = blockHead(block[0]);
+    let adpcmSamples = blockHead_(block[0]);
     for (let i=3; i<block.length; i+=2) {
-        let sample2 = encodeSample(block[i]);
-        let sample = encodeSample(block[i + 1]);
+        let sample2 = encodeSample_(block[i]);
+        let sample = encodeSample_(block[i + 1]);
         adpcmSamples.push((sample << 4) | sample2);
     }
     while (adpcmSamples.length < 256) {
@@ -167,19 +182,19 @@ function encodeBlock(block) {
  * @return {!Array<number>}
  */
 function decodeBlock(block) {
-    decoderPredicted = byteData.unpack([block[0], block[1]], int16);
-    decoderIndex = block[2];
-    decoderStep = stepTable[decoderIndex];
+    decoderPredicted_ = sign_((block[1] << 8) | block[0]);
+    decoderIndex_ = block[2];
+    decoderStep_ = STEP_TABLE[decoderIndex_];
     let result = [
-            decoderPredicted,
-            byteData.unpack([block[2], block[3]], int16)
+            decoderPredicted_,
+            sign_((block[3] << 8) | block[2])
         ];
     for (let i=4; i<block.length; i++) {
         let original_sample = block[i];
         let second_sample = original_sample >> 4;
         let first_sample = (second_sample << 4) ^ original_sample;
-        result.push(decodeSample(first_sample));
-        result.push(decodeSample(second_sample));
+        result.push(decodeSample_(first_sample));
+        result.push(decodeSample_(second_sample));
     }
     return result;
 }
