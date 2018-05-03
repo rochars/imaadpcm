@@ -3,12 +3,22 @@
  * https://github.com/rochars/wavefile
  *
  */
-
+const ClosureCompiler = require('google-closure-compiler-js').webpack;
 module.exports = {
   entry: './index.js',
   output: {
-    filename: './dist/imaadpcm.js'
+    filename: './dist/imaadpcm-min.js'
   },
+  plugins: [
+    new ClosureCompiler({
+      options: {
+        languageIn: 'ECMASCRIPT6',
+        languageOut: 'ECMASCRIPT5',
+        compilationLevel: 'ADVANCED',
+        warningLevel: "VERBOSE"
+      }
+    })
+  ],
   module: {
     loaders: [
       {

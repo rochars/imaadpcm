@@ -1,4 +1,4 @@
-/*!
+/*
  * imaadpcm
  * JavaScript IMA ADPCM codec.
  * Copyright (c) 2018 Rafael da Silva Rocha.
