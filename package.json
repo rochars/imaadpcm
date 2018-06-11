@@ -1,6 +1,6 @@
 {
   "name": "imaadpcm",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "JavaScript IMA-ADPCM codec.",
   "homepage": "https://github.com/rochars/imaadpcm",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -46,6 +46,5 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {},
-  "main": "index.js",
-  "browser": "./dist/imaadpcm-min.js"
+  "main": "index.js"
 }

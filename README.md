@@ -19,11 +19,6 @@ Use the compiled file in the */dist* folder:
 <script src="imaadpcm-min.js"></script>
 ```
 
-Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
-```html
-<script src="https://cdn.jsdelivr.net/npm/imaadpcm@1.1.6"></script>
-```
-
 ## Use
 Files:
 ```javascript
