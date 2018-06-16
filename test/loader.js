@@ -4,12 +4,14 @@
  *
  */
 
-let imaadpcm = require('../index.js');
+let imaadpcm;
 
 if (process.argv[3] == '--dist') {
-    require('browser-env')();let assert = require('assert');
-    require('../dist/imaadpcm-min.js');
+    require('browser-env')();
+    require('../dist/imaadpcm.min.js');
     imaadpcm = window.imaadpcm;
+} else {
+	imaadpcm = require('../index.js');
 }
 
 module.exports = imaadpcm;

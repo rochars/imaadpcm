@@ -246,7 +246,11 @@ function decode(adpcmSamples, blockAlign=256) {
     return samples;
 }
 
+/** @export */
 module.exports.encode = encode;
+/** @export */
 module.exports.decode = decode;
+/** @export */
 module.exports.encodeBlock = encodeBlock;
+/** @export */
 module.exports.decodeBlock = decodeBlock;

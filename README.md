@@ -16,7 +16,12 @@ npm install imaadpcm
 ## Browser
 Use the compiled file in the */dist* folder:
 ```html
-<script src="imaadpcm-min.js"></script>
+<script src="imaadpcm.min.js"></script>
+```
+
+Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
+```html
+<script src="https://cdn.jsdelivr.net/npm/imaadpcm@2/dist/imaadpcm.min.js"></script>
 ```
 
 ## Use
@@ -57,7 +62,7 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 
 ## In the browser
 ```html
-<script src="dist/imaadpcm-min.js"></script>
+<script src="imaadpcm.min.js"></script>
 <script>
     adpcmSamples = imaadpcm.encode(pcmSamples);
     pcmSamples = imaadpcm.decode(adpcmSamples);
