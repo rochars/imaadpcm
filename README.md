@@ -25,9 +25,9 @@ Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
 ```
 
 ## Use
-Files:
-```javascript
 
+### Files:
+```javascript
 const imaadpcm = require("imaadpcm");
 
 // Compressing all the samples in a file
@@ -43,32 +43,65 @@ samples = imaadpcm.decode(adpcm_samples);
 samples = imaadpcm.decode(adpcm_samples, 1024);
 ```
 
-Streaming:
+### Streaming:
 ```javascript
-
 const imaadpcm = require("imaadpcm");
 
-// Decompressing, blocks of 256 bytes assumed by default
+// Decompressing a ADPCM block
+// 256 is assumed as the default block size
 samples = imaadpcm.decodeBlock(adpcm_block);
 
 // Decompressing using a different block size
 samples = imaadpcm.decodeBlock(adpcm_block, 1024);
 
-// Compressing, only blocks of 505 samples
-// Only 16-bit samples are supported
+// Compressing PCM samples into a block of ADPCM samples
+// Only blocks of 505 samples are supported as input
+// Only 16-bit samples are supported as input
 adpcm_samples = imaadpcm.encodeBlock(sample_block);
 
 ```
 
-## In the browser
+### In the browser
 ```html
 <script src="imaadpcm.min.js"></script>
 <script>
-    adpcmSamples = imaadpcm.encode(pcmSamples);
+    var adpcmSamples = imaadpcm.encode(pcmSamples);
     pcmSamples = imaadpcm.decode(adpcmSamples);
-    adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
+    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
     pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
 </script>
+```
+
+## API
+```javascript
+/**
+ * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
+ * @param {!Array<number>} samples A array of samples.
+ * @return {!Array<number>}
+ */
+function encode(samples) {}
+
+/**
+ * Decode IMA ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
+ * @param {number} blockAlign The block size.
+ * @return {!Array<number>}
+ */
+function decode(adpcmSamples, blockAlign=256) {}
+
+/**
+ * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
+ * @param {!Array<number>} block A sample block of 505 samples.
+ * @return {!Array<number>}
+ */
+function encodeBlock(block) {}
+
+/**
+ * Decode a block of ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} block A adpcm sample block.
+ * @return {!Array<number>}
+ */
+function decodeBlock(block) {}
 ```
 
 ## References

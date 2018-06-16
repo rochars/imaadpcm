@@ -1,21 +1,47 @@
 /*
- * imaadpcm
- * JavaScript IMA ADPCM codec.
- * Copyright (c) 2018 Rafael da Silva Rocha.
+ * imaadpcm: IMA ADPCM codec in JavaScript.
  * https://github.com/rochars/imaadpcm
  *
- * References:
- * http://www.cs.columbia.edu/~hgs/audio/dvi/
- * https://github.com/acida/pyima
- * https://wiki.multimedia.cx/index.php/IMA_ADPCM
- * 
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
-/** @private */
+/**
+ * @fileoverview imaadpcm public API and private methods.
+ */
+
+/** @module imaadpcm */
+
+/**
+ * @type {!Array<number>}
+ * @private
+ */
 const INDEX_TABLE = [
     -1, -1, -1, -1, 2, 4, 6, 8,
     -1, -1, -1, -1, 2, 4, 6, 8];
-/** @private */
+/**
+ * @type {!Array<number>}
+ * @private
+ */
 const STEP_TABLE = [
     7, 8, 9, 10, 11, 12, 13, 14,
     16, 17, 19, 21, 23, 25, 28, 31,
@@ -29,17 +55,35 @@ const STEP_TABLE = [
     7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899,
     15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794,
     32767];
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var encoderPredicted_ = 0;
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var encoderIndex_ = 0;
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var encoderStep_ = 7;
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var decoderPredicted_ = 0;
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var decoderIndex_ = 0;
-/** @private */
+/**
+ * @type {number}
+ * @private
+ */
 var decoderStep_ = 7;
 
 /**
@@ -187,8 +231,8 @@ function encodeBlock(block) {
 }
 
 /**
- * Decode a block of 256 ADPCM samples into 16-bit PCM samples.
- * @param {!Array<number>} block A adpcm sample block of 256 samples.
+ * Decode a block of ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} block A adpcm sample block.
  * @return {!Array<number>}
  */
 function decodeBlock(block) {

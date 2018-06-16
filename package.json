@@ -3,7 +3,7 @@
   "version": "2.0.0-alpha.0",
   "description": "IMA ADPCM codec in JavaScript.",
   "homepage": "https://github.com/rochars/imaadpcm",
-  "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
+  "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
   "keywords": [
     "wav",
@@ -36,7 +36,7 @@
     "browser-env": "^3.2.5",
     "codecov": "^3.0.0",
     "docdash": "^0.4.0",
-    "google-closure-compiler-js": "^20170910.0.1",
+    "google-closure-compiler-js": "^20180610.0.0",
     "jsdoc": "~3.5.5",
     "jshint": "^2.9.5",
     "mocha": "^3.5.3",

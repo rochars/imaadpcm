@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2018 Rafael da Silva Rocha.
- * https://github.com/rochars/wavefile
+ * https://github.com/rochars/imaadpcm
  *
  */
 const ClosureCompiler = require('google-closure-compiler-js').webpack;
