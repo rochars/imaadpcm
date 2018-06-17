@@ -6,7 +6,7 @@ https://github.com/rochars/imaadpcm
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/imaadpcm.svg?style=flat-square)](https://codecov.io/gh/rochars/imaadpcm) [![Unix Build](https://img.shields.io/travis/rochars/imaadpcm.svg?style=flat-square)](https://travis-ci.org/rochars/imaadpcm) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/imaadpcm.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/imaadpcm) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/imaadpcm.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/imaadpcm/)
 
 ## About
-IMA-ADPCM codec for Node.js and the browser.
+IMA ADPCM codec in JavaScript.
 
 ## Install
 ```
@@ -48,10 +48,10 @@ samples = imaadpcm.decode(adpcm_samples, 1024);
 const imaadpcm = require("imaadpcm");
 
 // Decompressing a ADPCM block
-// 256 is assumed as the default block size
+// 256 block align is assumed by default
 samples = imaadpcm.decodeBlock(adpcm_block);
 
-// Decompressing using a different block size
+// Decompressing using a different block align (1024)
 samples = imaadpcm.decodeBlock(adpcm_block, 1024);
 
 // Compressing PCM samples into a block of ADPCM samples
