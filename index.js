@@ -87,6 +87,95 @@ let decoderIndex_ = 0;
 let decoderStep_ = 7;
 
 /**
+ * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
+ * @param {!Array<number>} samples A array of samples.
+ * @return {!Array<number>}
+ */
+function encode(samples) {
+    /** @type {!Array<number>} */
+    let adpcmSamples = [];
+    /** @type {Array<number>} */
+    let block = [];
+    for (let i=0; i<samples.length; i++) {
+        block.push(samples[i]);
+        if ((i % 505 == 0 && i != 0) || i == samples.length - 1) {
+            adpcmSamples = adpcmSamples.concat(encodeBlock(block));
+            block = [];
+        }
+    }
+    return adpcmSamples;
+}
+
+/**
+ * Decode IMA ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
+ * @param {number} blockAlign The block size.
+ * @return {!Array<number>}
+ */
+function decode(adpcmSamples, blockAlign=256) {
+    /** @type {!Array<number>} */
+    let samples = [];
+    /** @type {!Array<number>} */
+    let block = [];
+    for (let i=0; i<adpcmSamples.length; i++) {
+        if (i % blockAlign == 0 && i != 0) {            
+            samples = samples.concat(decodeBlock(block));
+            block = [];
+        }
+        block.push(adpcmSamples[i]);
+    }
+    return samples;
+}
+
+/**
+ * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
+ * @param {!Array<number>} block A sample block of 505 samples.
+ * @return {!Array<number>}
+ */
+function encodeBlock(block) {
+    /** @type {!Array<number>} */
+    let adpcmSamples = blockHead_(block[0]);
+    for (let i=3; i<block.length; i+=2) {
+        /** @type {number} */
+        let sample2 = encodeSample_(block[i]);
+        /** @type {number} */
+        let sample = encodeSample_(block[i + 1]);
+        adpcmSamples.push((sample << 4) | sample2);
+    }
+    while (adpcmSamples.length < 256) {
+        adpcmSamples.push(0);
+    }
+    return adpcmSamples;
+}
+
+/**
+ * Decode a block of ADPCM samples into 16-bit PCM samples.
+ * @param {!Array<number>} block A adpcm sample block.
+ * @return {!Array<number>}
+ */
+function decodeBlock(block) {
+    decoderPredicted_ = sign_((block[1] << 8) | block[0]);
+    decoderIndex_ = block[2];
+    decoderStep_ = STEP_TABLE[decoderIndex_];
+    /** @type {!Array<number>} */
+    let result = [
+            decoderPredicted_,
+            sign_((block[3] << 8) | block[2])
+        ];
+    for (let i=4; i<block.length; i++) {
+        /** @type {number} */
+        let original_sample = block[i];
+        /** @type {number} */
+        let second_sample = original_sample >> 4;
+        /** @type {number} */
+        let first_sample = (second_sample << 4) ^ original_sample;
+        result.push(decodeSample_(first_sample));
+        result.push(decodeSample_(second_sample));
+    }
+    return result;
+}
+
+/**
  * Sign a 16-bit integer.
  * @param {number} num A 16-bit integer.
  * @return {number}
@@ -225,95 +314,6 @@ function blockHead_(sample) {
     adpcmSamples.push(encoderIndex_);
     adpcmSamples.push(0);
     return adpcmSamples;
-}
-
-/**
- * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
- * @param {!Array<number>} block A sample block of 505 samples.
- * @return {!Array<number>}
- */
-function encodeBlock(block) {
-    /** @type {!Array<number>} */
-    let adpcmSamples = blockHead_(block[0]);
-    for (let i=3; i<block.length; i+=2) {
-        /** @type {number} */
-        let sample2 = encodeSample_(block[i]);
-        /** @type {number} */
-        let sample = encodeSample_(block[i + 1]);
-        adpcmSamples.push((sample << 4) | sample2);
-    }
-    while (adpcmSamples.length < 256) {
-        adpcmSamples.push(0);
-    }
-    return adpcmSamples;
-}
-
-/**
- * Decode a block of ADPCM samples into 16-bit PCM samples.
- * @param {!Array<number>} block A adpcm sample block.
- * @return {!Array<number>}
- */
-function decodeBlock(block) {
-    decoderPredicted_ = sign_((block[1] << 8) | block[0]);
-    decoderIndex_ = block[2];
-    decoderStep_ = STEP_TABLE[decoderIndex_];
-    /** @type {!Array<number>} */
-    let result = [
-            decoderPredicted_,
-            sign_((block[3] << 8) | block[2])
-        ];
-    for (let i=4; i<block.length; i++) {
-        /** @type {number} */
-        let original_sample = block[i];
-        /** @type {number} */
-        let second_sample = original_sample >> 4;
-        /** @type {number} */
-        let first_sample = (second_sample << 4) ^ original_sample;
-        result.push(decodeSample_(first_sample));
-        result.push(decodeSample_(second_sample));
-    }
-    return result;
-}
-
-/**
- * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
- * @param {!Array<number>} samples A array of samples.
- * @return {!Array<number>}
- */
-function encode(samples) {
-    /** @type {!Array<number>} */
-    let adpcmSamples = [];
-    /** @type {Array<number>} */
-    let block = [];
-    for (let i=0; i<samples.length; i++) {
-        block.push(samples[i]);
-        if ((i % 505 == 0 && i != 0) || i == samples.length - 1) {
-            adpcmSamples = adpcmSamples.concat(encodeBlock(block));
-            block = [];
-        }
-    }
-    return adpcmSamples;
-}
-
-/**
- * Decode IMA ADPCM samples into 16-bit PCM samples.
- * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
- * @param {number} blockAlign The block size.
- * @return {!Array<number>}
- */
-function decode(adpcmSamples, blockAlign=256) {
-    /** @type {!Array<number>} */
-    let samples = [];
-    /** @type {!Array<number>} */
-    let block = [];
-    for (let i=0; i<adpcmSamples.length; i++) {
-        if (i % blockAlign == 0 && i != 0) {            
-            samples = samples.concat(decodeBlock(block));
-            block = [];
-        }
-        block.push(adpcmSamples[i]);
-    }
-    return samples;
 }
 
 /** @export */

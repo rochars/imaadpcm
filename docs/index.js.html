@@ -98,32 +98,121 @@ const STEP_TABLE = [
  * @type {number}
  * @private
  */
-var encoderPredicted_ = 0;
+let encoderPredicted_ = 0;
 /**
  * @type {number}
  * @private
  */
-var encoderIndex_ = 0;
+let encoderIndex_ = 0;
 /**
  * @type {number}
  * @private
  */
-var encoderStep_ = 7;
+let encoderStep_ = 7;
 /**
  * @type {number}
  * @private
  */
-var decoderPredicted_ = 0;
+let decoderPredicted_ = 0;
 /**
  * @type {number}
  * @private
  */
-var decoderIndex_ = 0;
+let decoderIndex_ = 0;
 /**
  * @type {number}
  * @private
  */
-var decoderStep_ = 7;
+let decoderStep_ = 7;
+
+/**
+ * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
+ * @param {!Array&lt;number>} samples A array of samples.
+ * @return {!Array&lt;number>}
+ */
+function encode(samples) {
+    /** @type {!Array&lt;number>} */
+    let adpcmSamples = [];
+    /** @type {Array&lt;number>} */
+    let block = [];
+    for (let i=0; i&lt;samples.length; i++) {
+        block.push(samples[i]);
+        if ((i % 505 == 0 &amp;&amp; i != 0) || i == samples.length - 1) {
+            adpcmSamples = adpcmSamples.concat(encodeBlock(block));
+            block = [];
+        }
+    }
+    return adpcmSamples;
+}
+
+/**
+ * Decode IMA ADPCM samples into 16-bit PCM samples.
+ * @param {!Array&lt;number>} adpcmSamples A array of ADPCM samples.
+ * @param {number} blockAlign The block size.
+ * @return {!Array&lt;number>}
+ */
+function decode(adpcmSamples, blockAlign=256) {
+    /** @type {!Array&lt;number>} */
+    let samples = [];
+    /** @type {!Array&lt;number>} */
+    let block = [];
+    for (let i=0; i&lt;adpcmSamples.length; i++) {
+        if (i % blockAlign == 0 &amp;&amp; i != 0) {            
+            samples = samples.concat(decodeBlock(block));
+            block = [];
+        }
+        block.push(adpcmSamples[i]);
+    }
+    return samples;
+}
+
+/**
+ * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
+ * @param {!Array&lt;number>} block A sample block of 505 samples.
+ * @return {!Array&lt;number>}
+ */
+function encodeBlock(block) {
+    /** @type {!Array&lt;number>} */
+    let adpcmSamples = blockHead_(block[0]);
+    for (let i=3; i&lt;block.length; i+=2) {
+        /** @type {number} */
+        let sample2 = encodeSample_(block[i]);
+        /** @type {number} */
+        let sample = encodeSample_(block[i + 1]);
+        adpcmSamples.push((sample &lt;&lt; 4) | sample2);
+    }
+    while (adpcmSamples.length &lt; 256) {
+        adpcmSamples.push(0);
+    }
+    return adpcmSamples;
+}
+
+/**
+ * Decode a block of ADPCM samples into 16-bit PCM samples.
+ * @param {!Array&lt;number>} block A adpcm sample block.
+ * @return {!Array&lt;number>}
+ */
+function decodeBlock(block) {
+    decoderPredicted_ = sign_((block[1] &lt;&lt; 8) | block[0]);
+    decoderIndex_ = block[2];
+    decoderStep_ = STEP_TABLE[decoderIndex_];
+    /** @type {!Array&lt;number>} */
+    let result = [
+            decoderPredicted_,
+            sign_((block[3] &lt;&lt; 8) | block[2])
+        ];
+    for (let i=4; i&lt;block.length; i++) {
+        /** @type {number} */
+        let original_sample = block[i];
+        /** @type {number} */
+        let second_sample = original_sample >> 4;
+        /** @type {number} */
+        let first_sample = (second_sample &lt;&lt; 4) ^ original_sample;
+        result.push(decodeSample_(first_sample));
+        result.push(decodeSample_(second_sample));
+    }
+    return result;
+}
 
 /**
  * Sign a 16-bit integer.
@@ -168,7 +257,9 @@ function setEncoderInfo_(value, diff) {
  * @private
  */
 function encodeSample_(sample) {
+    /** @type {number} */
     let delta = sample - encoderPredicted_;
+    /** @type {number} */
     let value = 0;
     if (delta >= 0) {
         value = 0;
@@ -176,7 +267,9 @@ function encodeSample_(sample) {
         value = 8;
         delta = -delta;
     }
+    /** @type {number} */
     let step = STEP_TABLE[encoderIndex_];
+    /** @type {number} */
     let diff = step >> 3;
     if (delta > step) {
         value |= 4;
@@ -205,6 +298,7 @@ function encodeSample_(sample) {
  * @private
  */
 function decodeSample_(nibble) {
+    /** @type {number} */
     let difference = 0;
     if (nibble &amp; 4) {
         difference += decoderStep_;
@@ -225,6 +319,16 @@ function decodeSample_(nibble) {
     } else if (decoderPredicted_ &lt; -32767) {
         decoderPredicted_ = -32767;
     }
+    updateDecoder_(nibble);
+    return decoderPredicted_;
+}
+
+/**
+ * Update the index and step after decoding a sample.
+ * @param {number} nibble A 4-bit adpcm sample.
+ * @private
+ */
+function updateDecoder_(nibble) {
     decoderIndex_ += INDEX_TABLE[nibble];
     if (decoderIndex_ &lt; 0) {
         decoderIndex_ = 0;
@@ -232,7 +336,6 @@ function decodeSample_(nibble) {
         decoderIndex_ = 88;
     }
     decoderStep_ = STEP_TABLE[decoderIndex_];
-    return decoderPredicted_;
 }
 
 /**
@@ -243,90 +346,13 @@ function decodeSample_(nibble) {
  */
 function blockHead_(sample) {
     encodeSample_(sample);
+    /** @type {!Array&lt;number>} */
     let adpcmSamples = [];
     adpcmSamples.push(sample &amp; 0xFF);
     adpcmSamples.push((sample >> 8) &amp; 0xFF);
     adpcmSamples.push(encoderIndex_);
     adpcmSamples.push(0);
     return adpcmSamples;
-}
-
-/**
- * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
- * @param {!Array&lt;number>} block A sample block of 505 samples.
- * @return {!Array&lt;number>}
- */
-function encodeBlock(block) {
-    let adpcmSamples = blockHead_(block[0]);
-    for (let i=3; i&lt;block.length; i+=2) {
-        let sample2 = encodeSample_(block[i]);
-        let sample = encodeSample_(block[i + 1]);
-        adpcmSamples.push((sample &lt;&lt; 4) | sample2);
-    }
-    while (adpcmSamples.length &lt; 256) {
-        adpcmSamples.push(0);
-    }
-    return adpcmSamples;
-}
-
-/**
- * Decode a block of ADPCM samples into 16-bit PCM samples.
- * @param {!Array&lt;number>} block A adpcm sample block.
- * @return {!Array&lt;number>}
- */
-function decodeBlock(block) {
-    decoderPredicted_ = sign_((block[1] &lt;&lt; 8) | block[0]);
-    decoderIndex_ = block[2];
-    decoderStep_ = STEP_TABLE[decoderIndex_];
-    let result = [
-            decoderPredicted_,
-            sign_((block[3] &lt;&lt; 8) | block[2])
-        ];
-    for (let i=4; i&lt;block.length; i++) {
-        let original_sample = block[i];
-        let second_sample = original_sample >> 4;
-        let first_sample = (second_sample &lt;&lt; 4) ^ original_sample;
-        result.push(decodeSample_(first_sample));
-        result.push(decodeSample_(second_sample));
-    }
-    return result;
-}
-
-/**
- * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
- * @param {!Array&lt;number>} samples A array of samples.
- * @return {!Array&lt;number>}
- */
-function encode(samples) {
-    let adpcmSamples = [];
-    let block = [];
-    for (let i=0; i&lt;samples.length; i++) {
-        block.push(samples[i]);
-        if ((i % 505 == 0 &amp;&amp; i != 0) || i == samples.length - 1) {
-            adpcmSamples = adpcmSamples.concat(encodeBlock(block));
-            block = [];
-        }
-    }
-    return adpcmSamples;
-}
-
-/**
- * Decode IMA ADPCM samples into 16-bit PCM samples.
- * @param {!Array&lt;number>} adpcmSamples A array of ADPCM samples.
- * @param {number} blockAlign The block size.
- * @return {!Array&lt;number>}
- */
-function decode(adpcmSamples, blockAlign=256) {
-    let samples = [];
-    let block = [];
-    for (let i=0; i&lt;adpcmSamples.length; i++) {
-        if (i % blockAlign == 0 &amp;&amp; i != 0) {            
-            samples = samples.concat(decodeBlock(block));
-            block = [];
-        }
-        block.push(adpcmSamples[i]);
-    }
-    return samples;
 }
 
 /** @export */
@@ -349,7 +375,7 @@ module.exports.decodeBlock = decodeBlock;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Jun 16 2018 19:49:46 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jun 17 2018 00:42:44 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
