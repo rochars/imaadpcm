@@ -59,32 +59,32 @@ const STEP_TABLE = [
  * @type {number}
  * @private
  */
-var encoderPredicted_ = 0;
+let encoderPredicted_ = 0;
 /**
  * @type {number}
  * @private
  */
-var encoderIndex_ = 0;
+let encoderIndex_ = 0;
 /**
  * @type {number}
  * @private
  */
-var encoderStep_ = 7;
+let encoderStep_ = 7;
 /**
  * @type {number}
  * @private
  */
-var decoderPredicted_ = 0;
+let decoderPredicted_ = 0;
 /**
  * @type {number}
  * @private
  */
-var decoderIndex_ = 0;
+let decoderIndex_ = 0;
 /**
  * @type {number}
  * @private
  */
-var decoderStep_ = 7;
+let decoderStep_ = 7;
 
 /**
  * Sign a 16-bit integer.
@@ -191,6 +191,16 @@ function decodeSample_(nibble) {
     } else if (decoderPredicted_ < -32767) {
         decoderPredicted_ = -32767;
     }
+    updateDecoder_(nibble);
+    return decoderPredicted_;
+}
+
+/**
+ * Update the index and step after decoding a sample.
+ * @param {number} nibble A 4-bit adpcm sample.
+ * @private
+ */
+function updateDecoder_(nibble) {
     decoderIndex_ += INDEX_TABLE[nibble];
     if (decoderIndex_ < 0) {
         decoderIndex_ = 0;
@@ -198,7 +208,6 @@ function decodeSample_(nibble) {
         decoderIndex_ = 88;
     }
     decoderStep_ = STEP_TABLE[decoderIndex_];
-    return decoderPredicted_;
 }
 
 /**
