@@ -186,32 +186,6 @@ function sign_(num) {
 }
 
 /**
- * Set the value for encoderPredicted_ and encoderIndex_
- * after each sample is compressed.
- * @param {number} value The compressed ADPCM sample
- * @param {number} diff The calculated difference
- * @private
- */
-function setEncoderInfo_(value, diff) {
-    if (value & 8) {
-        encoderPredicted_ -= diff;
-    } else {
-        encoderPredicted_ += diff;
-    }
-    if (encoderPredicted_ < -0x8000) {
-        encoderPredicted_ = -0x8000;
-    } else if (encoderPredicted_ > 0x7fff) {
-        encoderPredicted_ = 0x7fff;
-    }
-    encoderIndex_ += INDEX_TABLE[value & 7];
-    if (encoderIndex_ < 0) {
-        encoderIndex_ = 0;
-    } else if (encoderIndex_ > 88) {
-        encoderIndex_ = 88;
-    }
-}
-
-/**
  * Compress a 16-bit PCM sample into a 4-bit ADPCM sample.
  * @param {number} sample The sample.
  * @return {number}
@@ -248,8 +222,34 @@ function encodeSample_(sample) {
         value |= 1;
         diff += step;
     }
-    setEncoderInfo_(value, diff);
+    updateEncoder_(value, diff);
     return value;
+}
+
+/**
+ * Set the value for encoderPredicted_ and encoderIndex_
+ * after each sample is compressed.
+ * @param {number} value The compressed ADPCM sample
+ * @param {number} diff The calculated difference
+ * @private
+ */
+function updateEncoder_(value, diff) {
+    if (value & 8) {
+        encoderPredicted_ -= diff;
+    } else {
+        encoderPredicted_ += diff;
+    }
+    if (encoderPredicted_ < -0x8000) {
+        encoderPredicted_ = -0x8000;
+    } else if (encoderPredicted_ > 0x7fff) {
+        encoderPredicted_ = 0x7fff;
+    }
+    encoderIndex_ += INDEX_TABLE[value & 7];
+    if (encoderIndex_ < 0) {
+        encoderIndex_ = 0;
+    } else if (encoderIndex_ > 88) {
+        encoderIndex_ = 88;
+    }
 }
 
 /**
