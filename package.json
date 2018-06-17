@@ -1,6 +1,6 @@
 {
   "name": "imaadpcm",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "IMA ADPCM codec in JavaScript.",
   "homepage": "https://github.com/rochars/imaadpcm",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
@@ -30,7 +30,8 @@
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "doc": "./node_modules/.bin/jsdoc index.js -d docs -r README.md -t node_modules/docdash",
     "pack": "webpack && npm run test-dist",
-    "build": "npm run lint && npm test && npm run pack && npm run doc"
+    "build": "npm run lint && npm test && npm run pack && npm run doc",
+    "build-ci": "npm run lint && npm run pack && npm run doc && npm test"
   },
   "devDependencies": {
     "browser-env": "^3.2.5",
