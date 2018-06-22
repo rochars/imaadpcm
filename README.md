@@ -21,12 +21,12 @@ Use the compiled file in the */dist* folder:
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/imaadpcm@"></script>
+<script src="https://cdn.jsdelivr.net/npm/imaadpcm@3"></script>
 ```
 
 Or get it from [unpkg](https://www.unpkg.com):
 ```html
-<script src="https://unpkg.com/imaadpcm@2"></script>
+<script src="https://unpkg.com/imaadpcm@3"></script>
 ```
 
 ## Use
@@ -136,6 +136,7 @@ http://www.cs.columbia.edu/~hgs/audio/dvi/
 https://github.com/acida/pyima
 
 ## Legal
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm?ref=badge_large)
 
 ### LICENSE
 Copyright (c) 2018 Rafael da Silva Rocha.
