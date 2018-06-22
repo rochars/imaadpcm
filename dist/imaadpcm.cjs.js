@@ -1,3 +1,78 @@
+(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["encode"] = encode;
+/* harmony export (immutable) */ __webpack_exports__["decode"] = decode;
+/* harmony export (immutable) */ __webpack_exports__["encodeBlock"] = encodeBlock;
+/* harmony export (immutable) */ __webpack_exports__["decodeBlock"] = decodeBlock;
 /*
  * imaadpcm: IMA ADPCM codec in JavaScript.
  * https://github.com/rochars/imaadpcm
@@ -91,7 +166,7 @@ let decoderStep_ = 7;
  * @param {!Array<number>} samples A array of samples.
  * @return {!Array<number>}
  */
-export function encode(samples) {
+function encode(samples) {
     /** @type {!Array<number>} */
     let adpcmSamples = [];
     /** @type {Array<number>} */
@@ -112,7 +187,7 @@ export function encode(samples) {
  * @param {number} blockAlign The block size.
  * @return {!Array<number>}
  */
-export function decode(adpcmSamples, blockAlign=256) {
+function decode(adpcmSamples, blockAlign=256) {
     /** @type {!Array<number>} */
     let samples = [];
     /** @type {!Array<number>} */
@@ -132,7 +207,7 @@ export function decode(adpcmSamples, blockAlign=256) {
  * @param {!Array<number>} block A sample block of 505 samples.
  * @return {!Array<number>}
  */
-export function encodeBlock(block) {
+function encodeBlock(block) {
     /** @type {!Array<number>} */
     let adpcmSamples = blockHead_(block[0]);
     for (let i=3; i<block.length; i+=2) {
@@ -153,7 +228,7 @@ export function encodeBlock(block) {
  * @param {!Array<number>} block A adpcm sample block.
  * @return {!Array<number>}
  */
-export function decodeBlock(block) {
+function decodeBlock(block) {
     decoderPredicted_ = sign_((block[1] << 8) | block[0]);
     decoderIndex_ = block[2];
     decoderStep_ = STEP_TABLE[decoderIndex_];
@@ -315,3 +390,7 @@ function blockHead_(sample) {
     adpcmSamples.push(0);
     return adpcmSamples;
 }
+
+
+/***/ })
+/******/ ])));
