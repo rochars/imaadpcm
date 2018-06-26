@@ -48,11 +48,24 @@
     <section class="readme">
         <article><h1>imaadpcm</h1><p>Copyright (c) 2018 Rafael da Silva Rocha.<br>https://github.com/rochars/imaadpcm</p>
 <p><a href="https://www.npmjs.com/package/imaadpcm"><img src="https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/imaadpcm/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a><br><a href="https://codecov.io/gh/rochars/imaadpcm"><img src="https://img.shields.io/codecov/c/github/rochars/imaadpcm.svg?style=flat-square" alt="Codecov"></a> <a href="https://travis-ci.org/rochars/imaadpcm"><img src="https://img.shields.io/travis/rochars/imaadpcm.svg?style=flat-square" alt="Unix Build"></a> <a href="https://ci.appveyor.com/project/rochars/imaadpcm"><img src="https://img.shields.io/appveyor/ci/rochars/imaadpcm.svg?style=flat-square&amp;logo=appveyor" alt="Windows Build"></a> <a href="https://scrutinizer-ci.com/g/rochars/imaadpcm/"><img src="https://img.shields.io/scrutinizer/g/rochars/imaadpcm.svg?style=flat-square&amp;logo=scrutinizer" alt="Scrutinizer"></a></p>
-<h2>About</h2><p>IMA ADPCM codec in JavaScript.</p>
-<h2>Install</h2><pre class="prettyprint source"><code>npm install imaadpcm</code></pre><h2>Browser</h2><p>Use the compiled file in the <em>/dist</em> folder:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;imaadpcm.min.js&quot;>&lt;/script></code></pre><p>Or get it from the <a href="https://www.jsdelivr.com">jsDelivr</a> CDN:</p>
+<p>IMA ADPCM codec in JavaScript.</p>
+<h2>Install</h2><pre class="prettyprint source"><code>npm install imaadpcm</code></pre><h2>Use</h2><h3>ES6</h3><p>import imaadpcm from <strong>imaadpcm.js</strong>:</p>
+<pre class="prettyprint source lang-javascript"><code>import * as imaadpcm from 'imaadpcm.js';
+let adpcmSamples = imaadpcm.encode(pcmSamples);</code></pre><h3>Node</h3><pre class="prettyprint source lang-javascript"><code>const imaadpcm = require(&quot;imaadpcm&quot;);
+let adpcmSamples = imaadpcm.encode(pcmSamples);</code></pre><h3>Browser</h3><p>Use the compiled file in the <em>/dist</em> folder:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;imaadpcm.min.js&quot;>&lt;/script>
+&lt;script>
+    var adpcmSamples = imaadpcm.encode(pcmSamples);
+    pcmSamples = imaadpcm.decode(adpcmSamples);
+    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
+    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
+&lt;/script></code></pre><p>Or get it from the <a href="https://www.jsdelivr.com">jsDelivr</a> CDN:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/imaadpcm@3&quot;>&lt;/script></code></pre><p>Or get it from <a href="https://www.unpkg.com">unpkg</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/imaadpcm@3&quot;>&lt;/script></code></pre><h2>Use</h2><h3>Files:</h3><pre class="prettyprint source lang-javascript"><code>const imaadpcm = require(&quot;imaadpcm&quot;);
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/imaadpcm@3&quot;>&lt;/script></code></pre><p>Or as a ES6 module in modern browsers from <a href="https://jspm.io">jspm</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script type=&quot;module&quot;>
+  import imaadpcm from 'https://dev.jspm.io/imaadpcm';
+  // ...
+&lt;/script></code></pre><h2>Examples</h2><h3>Files:</h3><pre class="prettyprint source lang-javascript"><code>const imaadpcm = require(&quot;imaadpcm&quot;);
 
 // Compressing all the samples in a file
 // Only 16-bit samples are supported
@@ -77,13 +90,7 @@ samples = imaadpcm.decodeBlock(adpcm_block, 1024);
 // Only blocks of 505 samples are supported as input
 // Only 16-bit samples are supported as input
 adpcm_samples = imaadpcm.encodeBlock(sample_block);
-</code></pre><h3>In the browser</h3><pre class="prettyprint source lang-html"><code>&lt;script src=&quot;imaadpcm.min.js&quot;>&lt;/script>
-&lt;script>
-    var adpcmSamples = imaadpcm.encode(pcmSamples);
-    pcmSamples = imaadpcm.decode(adpcmSamples);
-    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
-    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
-&lt;/script></code></pre><h2>API</h2><pre class="prettyprint source lang-javascript"><code>/**
+</code></pre><h2>API</h2><pre class="prettyprint source lang-javascript"><code>/**
  * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
  * @param {!Array&lt;number>} samples A array of samples.
  * @return {!Array&lt;number>}
@@ -110,24 +117,15 @@ function encodeBlock(block) {}
  * @param {!Array&lt;number>} block A adpcm sample block.
  * @return {!Array&lt;number>}
  */
-function decodeBlock(block) {}</code></pre><h2>Distribution</h2><p>This library is implemented as a ES6 module and also distributed as a CommonJS module, UMD module and a compiled script for browsers. If your system does not pick one automatically for you, you can pick one in the <strong>dist/</strong> folder.</p>
+function decodeBlock(block) {}</code></pre><h2>Distribution</h2><p>This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.</p>
 <ul>
-<li>The CommonJS is the one used by Node. It is served in the &quot;main&quot; field of this library's package.json</li>
-<li>The UMD module is compatible with Node, AMD and browsers. It is served in the &quot;browser&quot; field.</li>
-<li>The compiled dist is browser-only and should be the one served by CDNs.</li>
-<li>The &quot;module&quot; field points to &quot;./index.js&quot; and should be the default entry point.</li>
+<li>The <strong>CommonJS</strong> is the one used by Node. It is served in the &quot;main&quot; field of package.json</li>
+<li>The <strong>UMD</strong> module is compatible with Node, AMD and browsers. It is served in the &quot;browser&quot; field.</li>
+<li>The <strong>compiled dist</strong> is browser-only and should be the one served by CDNs.</li>
+<li>The <strong>ES6</strong> dist is <strong>imaadpcm.js</strong>, served as &quot;module&quot; in package.json</li>
 </ul>
-<p>If you are using a module bundler to compile a module that depends on this library you might need to specify what is the correct entry point as some bundlers will assume &quot;browser&quot;. In general, you should point to &quot;module&quot;.</p>
-<h3>webpack example:</h3><pre class="prettyprint source lang-javascript"><code>module.exports = {
-  entry: './index.js',
-  resolve: {
-    // tells webpack to use 'module' or 'main'
-    // not 'browser'
-    mainFields: ['module', 'main']
-  },
-  ...
-};</code></pre><h2>References</h2><p>http://<a href="http://www.cs.columbia.edu/~hgs/audio/dvi/">www.cs.columbia.edu/~hgs/audio/dvi/</a><br>https://github.com/acida/pyima</p>
-<h2>Legal</h2><p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm.svg?type=large" alt="FOSSA Status"></a></p>
+<p>You may load both <strong>imaadpcm.umd.js</strong> and <strong>imaadpcm.min.js</strong> in the browser with <code>&lt;script&gt;</code> tags.</p>
+<h2>References</h2><p>http://<a href="http://www.cs.columbia.edu/~hgs/audio/dvi/">www.cs.columbia.edu/~hgs/audio/dvi/</a><br>https://github.com/acida/pyima</p>
 <h3>LICENSE</h3><p>Copyright (c) 2018 Rafael da Silva Rocha.</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -251,7 +249,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 22 2018 15:27:01 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jun 25 2018 21:05:29 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

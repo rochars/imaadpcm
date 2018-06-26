@@ -1,43 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>index.js - Documentation</title>
-
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-</head>
-<body>
-
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
-
-<label for="nav-trigger" class="overlay"></label>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-imaadpcm.html">imaadpcm</a><ul class='methods'><li data-type='method'><a href="module-imaadpcm.html#.decode">decode</a></li><li data-type='method'><a href="module-imaadpcm.html#.decodeBlock">decodeBlock</a></li><li data-type='method'><a href="module-imaadpcm.html#.encode">encode</a></li><li data-type='method'><a href="module-imaadpcm.html#.encodeBlock">encodeBlock</a></li></ul></li></ul>
-</nav>
-
-<div id="main">
-    
-    <h1 class="page-title">index.js</h1>
-    
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
+/*
  * imaadpcm: IMA ADPCM codec in JavaScript.
  * https://github.com/rochars/imaadpcm
  *
@@ -71,14 +32,14 @@
 /** @module imaadpcm */
 
 /**
- * @type {!Array&lt;number>}
+ * @type {!Array<number>}
  * @private
  */
 const INDEX_TABLE = [
     -1, -1, -1, -1, 2, 4, 6, 8,
     -1, -1, -1, -1, 2, 4, 6, 8];
 /**
- * @type {!Array&lt;number>}
+ * @type {!Array<number>}
  * @private
  */
 const STEP_TABLE = [
@@ -108,11 +69,6 @@ let encoderIndex_ = 0;
  * @type {number}
  * @private
  */
-let encoderStep_ = 7;
-/**
- * @type {number}
- * @private
- */
 let decoderPredicted_ = 0;
 /**
  * @type {number}
@@ -127,17 +83,17 @@ let decoderStep_ = 7;
 
 /**
  * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
- * @param {!Array&lt;number>} samples A array of samples.
- * @return {!Array&lt;number>}
+ * @param {!Array<number>} samples A array of samples.
+ * @return {!Array<number>}
  */
-export function encode(samples) {
-    /** @type {!Array&lt;number>} */
+function encode(samples) {
+    /** @type {!Array<number>} */
     let adpcmSamples = [];
-    /** @type {Array&lt;number>} */
+    /** @type {Array<number>} */
     let block = [];
-    for (let i=0; i&lt;samples.length; i++) {
+    for (let i=0; i<samples.length; i++) {
         block.push(samples[i]);
-        if ((i % 505 == 0 &amp;&amp; i != 0) || i == samples.length - 1) {
+        if ((i % 505 == 0 && i != 0) || i == samples.length - 1) {
             adpcmSamples = adpcmSamples.concat(encodeBlock(block));
             block = [];
         }
@@ -147,17 +103,17 @@ export function encode(samples) {
 
 /**
  * Decode IMA ADPCM samples into 16-bit PCM samples.
- * @param {!Array&lt;number>} adpcmSamples A array of ADPCM samples.
+ * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
  * @param {number} blockAlign The block size.
- * @return {!Array&lt;number>}
+ * @return {!Array<number>}
  */
-export function decode(adpcmSamples, blockAlign=256) {
-    /** @type {!Array&lt;number>} */
+function decode(adpcmSamples, blockAlign=256) {
+    /** @type {!Array<number>} */
     let samples = [];
-    /** @type {!Array&lt;number>} */
+    /** @type {!Array<number>} */
     let block = [];
-    for (let i=0; i&lt;adpcmSamples.length; i++) {
-        if (i % blockAlign == 0 &amp;&amp; i != 0) {            
+    for (let i=0; i<adpcmSamples.length; i++) {
+        if (i % blockAlign == 0 && i != 0) {            
             samples = samples.concat(decodeBlock(block));
             block = [];
         }
@@ -168,20 +124,20 @@ export function decode(adpcmSamples, blockAlign=256) {
 
 /**
  * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
- * @param {!Array&lt;number>} block A sample block of 505 samples.
- * @return {!Array&lt;number>}
+ * @param {!Array<number>} block A sample block of 505 samples.
+ * @return {!Array<number>}
  */
-export function encodeBlock(block) {
-    /** @type {!Array&lt;number>} */
+function encodeBlock(block) {
+    /** @type {!Array<number>} */
     let adpcmSamples = blockHead_(block[0]);
-    for (let i=3; i&lt;block.length; i+=2) {
+    for (let i=3; i<block.length; i+=2) {
         /** @type {number} */
         let sample2 = encodeSample_(block[i]);
         /** @type {number} */
         let sample = encodeSample_(block[i + 1]);
-        adpcmSamples.push((sample &lt;&lt; 4) | sample2);
+        adpcmSamples.push((sample << 4) | sample2);
     }
-    while (adpcmSamples.length &lt; 256) {
+    while (adpcmSamples.length < 256) {
         adpcmSamples.push(0);
     }
     return adpcmSamples;
@@ -189,25 +145,25 @@ export function encodeBlock(block) {
 
 /**
  * Decode a block of ADPCM samples into 16-bit PCM samples.
- * @param {!Array&lt;number>} block A adpcm sample block.
- * @return {!Array&lt;number>}
+ * @param {!Array<number>} block A adpcm sample block.
+ * @return {!Array<number>}
  */
-export function decodeBlock(block) {
-    decoderPredicted_ = sign_((block[1] &lt;&lt; 8) | block[0]);
+function decodeBlock(block) {
+    decoderPredicted_ = sign_((block[1] << 8) | block[0]);
     decoderIndex_ = block[2];
     decoderStep_ = STEP_TABLE[decoderIndex_];
-    /** @type {!Array&lt;number>} */
+    /** @type {!Array<number>} */
     let result = [
             decoderPredicted_,
-            sign_((block[3] &lt;&lt; 8) | block[2])
+            sign_((block[3] << 8) | block[2])
         ];
-    for (let i=4; i&lt;block.length; i++) {
+    for (let i=4; i<block.length; i++) {
         /** @type {number} */
         let original_sample = block[i];
         /** @type {number} */
         let second_sample = original_sample >> 4;
         /** @type {number} */
-        let first_sample = (second_sample &lt;&lt; 4) ^ original_sample;
+        let first_sample = (second_sample << 4) ^ original_sample;
         result.push(decodeSample_(first_sample));
         result.push(decodeSample_(second_sample));
     }
@@ -273,18 +229,18 @@ function encodeSample_(sample) {
  * @private
  */
 function updateEncoder_(value, diff) {
-    if (value &amp; 8) {
+    if (value & 8) {
         encoderPredicted_ -= diff;
     } else {
         encoderPredicted_ += diff;
     }
-    if (encoderPredicted_ &lt; -0x8000) {
+    if (encoderPredicted_ < -0x8000) {
         encoderPredicted_ = -0x8000;
     } else if (encoderPredicted_ > 0x7fff) {
         encoderPredicted_ = 0x7fff;
     }
-    encoderIndex_ += INDEX_TABLE[value &amp; 7];
-    if (encoderIndex_ &lt; 0) {
+    encoderIndex_ += INDEX_TABLE[value & 7];
+    if (encoderIndex_ < 0) {
         encoderIndex_ = 0;
     } else if (encoderIndex_ > 88) {
         encoderIndex_ = 88;
@@ -300,23 +256,23 @@ function updateEncoder_(value, diff) {
 function decodeSample_(nibble) {
     /** @type {number} */
     let difference = 0;
-    if (nibble &amp; 4) {
+    if (nibble & 4) {
         difference += decoderStep_;
     }
-    if (nibble &amp; 2) {
+    if (nibble & 2) {
         difference += decoderStep_ >> 1;
     }
-    if (nibble &amp; 1) {
+    if (nibble & 1) {
         difference += decoderStep_ >> 2;
     }
     difference += decoderStep_ >> 3;
-    if (nibble &amp; 8) {
+    if (nibble & 8) {
         difference = -difference;
     }
     decoderPredicted_ += difference;
     if (decoderPredicted_ > 32767) {
         decoderPredicted_ = 32767;
-    } else if (decoderPredicted_ &lt; -32767) {
+    } else if (decoderPredicted_ < -32767) {
         decoderPredicted_ = -32767;
     }
     updateDecoder_(nibble);
@@ -330,7 +286,7 @@ function decodeSample_(nibble) {
  */
 function updateDecoder_(nibble) {
     decoderIndex_ += INDEX_TABLE[nibble];
-    if (decoderIndex_ &lt; 0) {
+    if (decoderIndex_ < 0) {
         decoderIndex_ = 0;
     } else if (decoderIndex_ > 88) {
         decoderIndex_ = 88;
@@ -341,35 +297,18 @@ function updateDecoder_(nibble) {
 /**
  * Return the head of a ADPCM sample block.
  * @param {number} sample The first sample of the block.
- * @return {!Array&lt;number>}
+ * @return {!Array<number>}
  * @private
  */
 function blockHead_(sample) {
     encodeSample_(sample);
-    /** @type {!Array&lt;number>} */
+    /** @type {!Array<number>} */
     let adpcmSamples = [];
-    adpcmSamples.push(sample &amp; 0xFF);
-    adpcmSamples.push((sample >> 8) &amp; 0xFF);
+    adpcmSamples.push(sample & 0xFF);
+    adpcmSamples.push((sample >> 8) & 0xFF);
     adpcmSamples.push(encoderIndex_);
     adpcmSamples.push(0);
     return adpcmSamples;
 }
-</code></pre>
-        </article>
-    </section>
 
-
-
-
-</div>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jun 25 2018 21:05:29 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
-</footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/linenumber.js"></script>
-</body>
-</html>
+export { encode, decode, encodeBlock, decodeBlock };

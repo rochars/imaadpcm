@@ -20,6 +20,10 @@ if (process.argv[3] == '--min') {
 } else if (process.argv[3] == '--cjs') {
 	imaadpcm = require('../dist/imaadpcm.cjs.js');
 
+// esm
+} else if (process.argv[3] == '--esm') {
+	imaadpcm = require('../dist/imaadpcm.js');
+
 // ESM
 } else {
 	imaadpcm = require('../index.js');

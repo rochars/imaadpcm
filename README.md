@@ -5,7 +5,6 @@ https://github.com/rochars/imaadpcm
 [![NPM version](https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge)](https://www.npmjs.com/package/imaadpcm) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/imaadpcm/index.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/imaadpcm.svg?style=flat-square)](https://codecov.io/gh/rochars/imaadpcm) [![Unix Build](https://img.shields.io/travis/rochars/imaadpcm.svg?style=flat-square)](https://travis-ci.org/rochars/imaadpcm) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/imaadpcm.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/imaadpcm) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/imaadpcm.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/imaadpcm/)
 
-## About
 IMA ADPCM codec in JavaScript.
 
 ## Install
@@ -13,10 +12,31 @@ IMA ADPCM codec in JavaScript.
 npm install imaadpcm
 ```
 
-## Browser
+## Use
+
+### ES6
+import imaadpcm from **imaadpcm.js**:
+```javascript
+import * as imaadpcm from 'imaadpcm.js';
+let adpcmSamples = imaadpcm.encode(pcmSamples);
+```
+
+### Node
+```javascript
+const imaadpcm = require("imaadpcm");
+let adpcmSamples = imaadpcm.encode(pcmSamples);
+```
+
+### Browser
 Use the compiled file in the */dist* folder:
 ```html
 <script src="imaadpcm.min.js"></script>
+<script>
+    var adpcmSamples = imaadpcm.encode(pcmSamples);
+    pcmSamples = imaadpcm.decode(adpcmSamples);
+    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
+    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
+</script>
 ```
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
@@ -29,7 +49,15 @@ Or get it from [unpkg](https://www.unpkg.com):
 <script src="https://unpkg.com/imaadpcm@3"></script>
 ```
 
-## Use
+Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
+```html
+<script type="module">
+  import imaadpcm from 'https://dev.jspm.io/imaadpcm';
+  // ...
+</script>
+```
+
+## Examples
 
 ### Files:
 ```javascript
@@ -66,17 +94,6 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 
 ```
 
-### In the browser
-```html
-<script src="imaadpcm.min.js"></script>
-<script>
-    var adpcmSamples = imaadpcm.encode(pcmSamples);
-    pcmSamples = imaadpcm.decode(adpcmSamples);
-    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
-    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
-</script>
-```
-
 ## API
 ```javascript
 /**
@@ -110,33 +127,18 @@ function decodeBlock(block) {}
 ```
 
 ## Distribution
-This library is implemented as a ES6 module and also distributed as a CommonJS module, UMD module and a compiled script for browsers. If your system does not pick one automatically for you, you can pick one in the **dist/** folder.
-- The CommonJS is the one used by Node. It is served in the "main" field of this library's package.json
-- The UMD module is compatible with Node, AMD and browsers. It is served in the "browser" field.
-- The compiled dist is browser-only and should be the one served by CDNs.
-- The "module" field points to "./index.js" and should be the default entry point.
+This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.
 
-If you are using a module bundler to compile a module that depends on this library you might need to specify what is the correct entry point as some bundlers will assume "browser". In general, you should point to "module".
+- The **CommonJS** is the one used by Node. It is served in the "main" field of package.json
+- The **UMD** module is compatible with Node, AMD and browsers. It is served in the "browser" field.
+- The **compiled dist** is browser-only and should be the one served by CDNs.
+- The **ES6** dist is **imaadpcm.js**, served as "module" in package.json
 
-### webpack example:
-```javascript
-module.exports = {
-  entry: './index.js',
-  resolve: {
-    // tells webpack to use 'module' or 'main'
-    // not 'browser'
-    mainFields: ['module', 'main']
-  },
-  ...
-};
-```
+You may load both **imaadpcm.umd.js** and **imaadpcm.min.js** in the browser with ```<script>``` tags.
 
 ## References
 http://www.cs.columbia.edu/~hgs/audio/dvi/  
 https://github.com/acida/pyima
-
-## Legal
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fimaadpcm?ref=badge_large)
 
 ### LICENSE
 Copyright (c) 2018 Rafael da Silva Rocha.
