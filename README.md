@@ -22,6 +22,7 @@ let adpcmSamples = imaadpcm.encode(pcmSamples);
 ```
 
 ### Node
+Require imaadpcm from "imaadpcm":
 ```javascript
 const imaadpcm = require("imaadpcm");
 let adpcmSamples = imaadpcm.encode(pcmSamples);
@@ -41,18 +42,18 @@ Use the compiled file in the */dist* folder:
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/imaadpcm@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/imaadpcm"></script>
 ```
 
 Or get it from [unpkg](https://www.unpkg.com):
 ```html
-<script src="https://unpkg.com/imaadpcm@3"></script>
+<script src="https://unpkg.com/imaadpcm"></script>
 ```
 
 Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ```html
 <script type="module">
-  import imaadpcm from 'https://dev.jspm.io/imaadpcm';
+  import * as imaadpcm from 'https://dev.jspm.io/imaadpcm';
   // ...
 </script>
 ```
@@ -98,49 +99,41 @@ adpcm_samples = imaadpcm.encodeBlock(sample_block);
 ```javascript
 /**
  * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
- * @param {!Array<number>} samples A array of samples.
- * @return {!Array<number>}
+ * @param {!Int16Array} samples A array of samples.
+ * @return {!Uint8Array}
  */
-function encode(samples) {}
+export function encode(samples) {}
 
 /**
  * Decode IMA ADPCM samples into 16-bit PCM samples.
- * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
+ * @param {!Uint8Array} adpcmSamples A array of ADPCM samples.
  * @param {number} blockAlign The block size.
- * @return {!Array<number>}
+ * @return {!Int16Array}
  */
-function decode(adpcmSamples, blockAlign=256) {}
+export function decode(adpcmSamples, blockAlign=256) {}
 
 /**
  * Encode a block of 505 16-bit samples as 4-bit ADPCM samples.
  * @param {!Array<number>} block A sample block of 505 samples.
  * @return {!Array<number>}
  */
-function encodeBlock(block) {}
+export function encodeBlock(block) {}
 
 /**
  * Decode a block of ADPCM samples into 16-bit PCM samples.
  * @param {!Array<number>} block A adpcm sample block.
  * @return {!Array<number>}
  */
-function decodeBlock(block) {}
+export function decodeBlock(block) {}
 ```
-
-## Distribution
-This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.
-
-- The **CommonJS** is the one used by Node. It is served in the "main" field of package.json
-- The **UMD** module is compatible with Node, AMD and browsers. It is served in the "browser" field.
-- The **compiled dist** is browser-only and should be the one served by CDNs.
-- The **ES6** dist is **imaadpcm.js**, served as "module" in package.json
-
-You may load both **imaadpcm.umd.js** and **imaadpcm.min.js** in the browser with ```<script>``` tags.
 
 ## References
 http://www.cs.columbia.edu/~hgs/audio/dvi/  
 https://github.com/acida/pyima
 
-### LICENSE
+## LICENSE
+Derived from https://github.com/acida/pyima  
+Copyright (c) 2016 acida. MIT License.  
 Copyright (c) 2018 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining

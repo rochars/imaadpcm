@@ -4,9 +4,9 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 /*
  * imaadpcm: IMA ADPCM codec in JavaScript.
- * https://github.com/rochars/imaadpcm
- *
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ * Derived from https://github.com/acida/pyima  
+ * Copyright (c) 2016 acida. MIT License.  
+ * Copyright (c) 2018 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
  */
 
 /**
- * @fileoverview imaadpcm public API and private methods.
+ * @fileoverview imaadpcm API and private methods.
  */
 
 /** @module imaadpcm */
@@ -87,43 +87,49 @@ let decoderStep_ = 7;
 
 /**
  * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
- * @param {!Array<number>} samples A array of samples.
- * @return {!Array<number>}
+ * @param {!Int16Array} samples A array of samples.
+ * @return {!Uint8Array}
  */
 function encode(samples) {
-    /** @type {!Array<number>} */
-    let adpcmSamples = [];
-    /** @type {Array<number>} */
-    let block = [];
-    for (let i=0; i<samples.length; i++) {
-        block.push(samples[i]);
-        if ((i % 505 == 0 && i != 0) || i == samples.length - 1) {
-            adpcmSamples = adpcmSamples.concat(encodeBlock(block));
-            block = [];
-        }
+  /** @type {!Uint8Array} */
+  let adpcmSamples = new Uint8Array((samples.length));
+  /** @type {!Array<number>} */
+  let block = [];
+  /** @type {number} */
+  let fileIndex = 0;
+  for (let i=0; i<samples.length; i++) {
+    if ((i % 505 == 0 && i != 0)) {
+      adpcmSamples.set(encodeBlock(block), fileIndex);
+      fileIndex += 256;
+      block = [];
     }
-    return adpcmSamples;
+    block.push(samples[i]);
+  }
+  return adpcmSamples;
 }
 
 /**
  * Decode IMA ADPCM samples into 16-bit PCM samples.
- * @param {!Array<number>} adpcmSamples A array of ADPCM samples.
+ * @param {!Uint8Array} adpcmSamples A array of ADPCM samples.
  * @param {number} blockAlign The block size.
- * @return {!Array<number>}
+ * @return {!Int16Array}
  */
 function decode(adpcmSamples, blockAlign=256) {
-    /** @type {!Array<number>} */
-    let samples = [];
-    /** @type {!Array<number>} */
-    let block = [];
-    for (let i=0; i<adpcmSamples.length; i++) {
-        if (i % blockAlign == 0 && i != 0) {            
-            samples = samples.concat(decodeBlock(block));
-            block = [];
-        }
-        block.push(adpcmSamples[i]);
+  /** @type {!Int16Array} */
+  let samples = new Int16Array(adpcmSamples.length * 2);
+  /** @type {!Array<number>} */
+  let block = [];
+  /** @type {number} */
+  let fileIndex = 0;
+  for (let i=0; i<adpcmSamples.length; i++) {
+    if (i % blockAlign == 0 && i != 0) {            
+      samples.set(decodeBlock(block), fileIndex);
+      fileIndex += blockAlign * 2;
+      block = [];
     }
-    return samples;
+    block.push(adpcmSamples[i]);
+  }
+  return samples;
 }
 
 /**
@@ -132,19 +138,19 @@ function decode(adpcmSamples, blockAlign=256) {
  * @return {!Array<number>}
  */
 function encodeBlock(block) {
-    /** @type {!Array<number>} */
-    let adpcmSamples = blockHead_(block[0]);
-    for (let i=3; i<block.length; i+=2) {
-        /** @type {number} */
-        let sample2 = encodeSample_(block[i]);
-        /** @type {number} */
-        let sample = encodeSample_(block[i + 1]);
-        adpcmSamples.push((sample << 4) | sample2);
-    }
-    while (adpcmSamples.length < 256) {
-        adpcmSamples.push(0);
-    }
-    return adpcmSamples;
+  /** @type {!Array<number>} */
+  let adpcmSamples = blockHead_(block[0]);
+  for (let i=3; i<block.length; i+=2) {
+    /** @type {number} */
+    let sample2 = encodeSample_(block[i]);
+    /** @type {number} */
+    let sample = encodeSample_(block[i + 1]);
+    adpcmSamples.push((sample << 4) | sample2);
+  }
+  while (adpcmSamples.length < 256) {
+    adpcmSamples.push(0);
+  }
+  return adpcmSamples;
 }
 
 /**
@@ -153,25 +159,25 @@ function encodeBlock(block) {
  * @return {!Array<number>}
  */
 function decodeBlock(block) {
-    decoderPredicted_ = sign_((block[1] << 8) | block[0]);
-    decoderIndex_ = block[2];
-    decoderStep_ = STEP_TABLE[decoderIndex_];
-    /** @type {!Array<number>} */
-    let result = [
-            decoderPredicted_,
-            sign_((block[3] << 8) | block[2])
-        ];
-    for (let i=4; i<block.length; i++) {
-        /** @type {number} */
-        let original_sample = block[i];
-        /** @type {number} */
-        let second_sample = original_sample >> 4;
-        /** @type {number} */
-        let first_sample = (second_sample << 4) ^ original_sample;
-        result.push(decodeSample_(first_sample));
-        result.push(decodeSample_(second_sample));
-    }
-    return result;
+  decoderPredicted_ = sign_((block[1] << 8) | block[0]);
+  decoderIndex_ = block[2];
+  decoderStep_ = STEP_TABLE[decoderIndex_];
+  /** @type {!Array<number>} */
+  let result = [
+      decoderPredicted_,
+      sign_((block[3] << 8) | block[2])
+    ];
+  for (let i=4; i<block.length; i++) {
+    /** @type {number} */
+    let original_sample = block[i];
+    /** @type {number} */
+    let second_sample = original_sample >> 4;
+    /** @type {number} */
+    let first_sample = (second_sample << 4) ^ original_sample;
+    result.push(decodeSample_(first_sample));
+    result.push(decodeSample_(second_sample));
+  }
+  return result;
 }
 
 /**
@@ -181,7 +187,7 @@ function decodeBlock(block) {
  * @private
  */
 function sign_(num) {
-    return num > 32768 ? num - 65536 : num;
+  return num > 32768 ? num - 65536 : num;
 }
 
 /**
@@ -191,38 +197,38 @@ function sign_(num) {
  * @private
  */
 function encodeSample_(sample) {
-    /** @type {number} */
-    let delta = sample - encoderPredicted_;
-    /** @type {number} */
-    let value = 0;
-    if (delta >= 0) {
-        value = 0;
-    } else {
-        value = 8;
-        delta = -delta;
-    }
-    /** @type {number} */
-    let step = STEP_TABLE[encoderIndex_];
-    /** @type {number} */
-    let diff = step >> 3;
-    if (delta > step) {
-        value |= 4;
-        delta -= step;
-        diff += step;
-    }
-    step >>= 1;
-    if (delta > step) {
-        value |= 2;
-        delta -= step;
-        diff += step;
-    }
-    step >>= 1;
-    if (delta > step) {
-        value |= 1;
-        diff += step;
-    }
-    updateEncoder_(value, diff);
-    return value;
+  /** @type {number} */
+  let delta = sample - encoderPredicted_;
+  /** @type {number} */
+  let value = 0;
+  if (delta >= 0) {
+    value = 0;
+  } else {
+    value = 8;
+    delta = -delta;
+  }
+  /** @type {number} */
+  let step = STEP_TABLE[encoderIndex_];
+  /** @type {number} */
+  let diff = step >> 3;
+  if (delta > step) {
+    value |= 4;
+    delta -= step;
+    diff += step;
+  }
+  step >>= 1;
+  if (delta > step) {
+    value |= 2;
+    delta -= step;
+    diff += step;
+  }
+  step >>= 1;
+  if (delta > step) {
+    value |= 1;
+    diff += step;
+  }
+  updateEncoder_(value, diff);
+  return value;
 }
 
 /**
@@ -233,22 +239,22 @@ function encodeSample_(sample) {
  * @private
  */
 function updateEncoder_(value, diff) {
-    if (value & 8) {
-        encoderPredicted_ -= diff;
-    } else {
-        encoderPredicted_ += diff;
-    }
-    if (encoderPredicted_ < -0x8000) {
-        encoderPredicted_ = -0x8000;
-    } else if (encoderPredicted_ > 0x7fff) {
-        encoderPredicted_ = 0x7fff;
-    }
-    encoderIndex_ += INDEX_TABLE[value & 7];
-    if (encoderIndex_ < 0) {
-        encoderIndex_ = 0;
-    } else if (encoderIndex_ > 88) {
-        encoderIndex_ = 88;
-    }
+  if (value & 8) {
+    encoderPredicted_ -= diff;
+  } else {
+    encoderPredicted_ += diff;
+  }
+  if (encoderPredicted_ < -0x8000) {
+    encoderPredicted_ = -0x8000;
+  } else if (encoderPredicted_ > 0x7fff) {
+    encoderPredicted_ = 0x7fff;
+  }
+  encoderIndex_ += INDEX_TABLE[value & 7];
+  if (encoderIndex_ < 0) {
+    encoderIndex_ = 0;
+  } else if (encoderIndex_ > 88) {
+    encoderIndex_ = 88;
+  }
 }
 
 /**
@@ -258,29 +264,29 @@ function updateEncoder_(value, diff) {
  * @private
  */
 function decodeSample_(nibble) {
-    /** @type {number} */
-    let difference = 0;
-    if (nibble & 4) {
-        difference += decoderStep_;
-    }
-    if (nibble & 2) {
-        difference += decoderStep_ >> 1;
-    }
-    if (nibble & 1) {
-        difference += decoderStep_ >> 2;
-    }
-    difference += decoderStep_ >> 3;
-    if (nibble & 8) {
-        difference = -difference;
-    }
-    decoderPredicted_ += difference;
-    if (decoderPredicted_ > 32767) {
-        decoderPredicted_ = 32767;
-    } else if (decoderPredicted_ < -32767) {
-        decoderPredicted_ = -32767;
-    }
-    updateDecoder_(nibble);
-    return decoderPredicted_;
+  /** @type {number} */
+  let difference = 0;
+  if (nibble & 4) {
+    difference += decoderStep_;
+  }
+  if (nibble & 2) {
+    difference += decoderStep_ >> 1;
+  }
+  if (nibble & 1) {
+    difference += decoderStep_ >> 2;
+  }
+  difference += decoderStep_ >> 3;
+  if (nibble & 8) {
+    difference = -difference;
+  }
+  decoderPredicted_ += difference;
+  if (decoderPredicted_ > 32767) {
+    decoderPredicted_ = 32767;
+  } else if (decoderPredicted_ < -32767) {
+    decoderPredicted_ = -32767;
+  }
+  updateDecoder_(nibble);
+  return decoderPredicted_;
 }
 
 /**
@@ -289,13 +295,13 @@ function decodeSample_(nibble) {
  * @private
  */
 function updateDecoder_(nibble) {
-    decoderIndex_ += INDEX_TABLE[nibble];
-    if (decoderIndex_ < 0) {
-        decoderIndex_ = 0;
-    } else if (decoderIndex_ > 88) {
-        decoderIndex_ = 88;
-    }
-    decoderStep_ = STEP_TABLE[decoderIndex_];
+  decoderIndex_ += INDEX_TABLE[nibble];
+  if (decoderIndex_ < 0) {
+    decoderIndex_ = 0;
+  } else if (decoderIndex_ > 88) {
+    decoderIndex_ = 88;
+  }
+  decoderStep_ = STEP_TABLE[decoderIndex_];
 }
 
 /**
@@ -305,14 +311,14 @@ function updateDecoder_(nibble) {
  * @private
  */
 function blockHead_(sample) {
-    encodeSample_(sample);
-    /** @type {!Array<number>} */
-    let adpcmSamples = [];
-    adpcmSamples.push(sample & 0xFF);
-    adpcmSamples.push((sample >> 8) & 0xFF);
-    adpcmSamples.push(encoderIndex_);
-    adpcmSamples.push(0);
-    return adpcmSamples;
+  encodeSample_(sample);
+  /** @type {!Array<number>} */
+  let adpcmSamples = [];
+  adpcmSamples.push(sample & 0xFF);
+  adpcmSamples.push((sample >> 8) & 0xFF);
+  adpcmSamples.push(encoderIndex_);
+  adpcmSamples.push(0);
+  return adpcmSamples;
 }
 
 exports.encode = encode;
