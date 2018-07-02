@@ -93,7 +93,7 @@ let decoderStep_ = 7;
  */
 export function encode(samples) {
   /** @type {!Uint8Array} */
-  let adpcmSamples = new Uint8Array((samples.length));
+  let adpcmSamples = new Uint8Array((samples.length / 2) + 512);
   /** @type {!Array<number>} */
   let block = [];
   /** @type {number} */

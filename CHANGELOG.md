@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v4.0.1 (2018-07-02)
+- Fix output array size on encode()
+- Removed dev files from the dist
+
 ## v4.0.0 (2018-07-01)
 - Use typed arrays for input and output
 - Add TypeScript declaration file

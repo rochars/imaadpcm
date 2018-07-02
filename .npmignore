@@ -9,8 +9,8 @@ test/
 
 # Development files
 .gitignore
-.npmignore
 .jshintrc
+.npmignore
 .travis.yml
 appveyor.yml
 rollup.config.js
