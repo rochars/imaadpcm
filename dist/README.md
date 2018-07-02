@@ -30,6 +30,8 @@ You may load both **imaadpcm.umd.js** and **imaadpcm.min.js** in the browser wit
 If your module bundler is using "browser" as the entry point **your dist should work the same** but will be a larger file.
 
 ## LICENSE
+Derived from https://github.com/acida/pyima  
+Copyright (c) 2016 acida. MIT License.  
 Copyright (c) 2018 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining
