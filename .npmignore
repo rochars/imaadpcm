@@ -13,4 +13,4 @@ test/
 .jshintrc
 .travis.yml
 appveyor.yml
-webpack.config.js
+rollup.config.js
