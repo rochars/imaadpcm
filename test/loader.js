@@ -26,6 +26,8 @@ if (process.argv[3] == '--min') {
 // esm
 } else if (process.argv[3] == '--esm') {
 	console.log('esm');
+	require = require("esm")(module);
+	global.module = module;
 	imaadpcm = require('../dist/imaadpcm.js');
 
 // ESM
