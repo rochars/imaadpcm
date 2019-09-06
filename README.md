@@ -1,5 +1,5 @@
 # imaadpcm
-Copyright (c) 2018 Rafael da Silva Rocha.  
+Copyright (c) 2019 Rafael da Silva Rocha.  
 https://github.com/rochars/imaadpcm
 
 [![NPM version](https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge)](https://www.npmjs.com/package/imaadpcm) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/imaadpcm/index.html)  
@@ -10,52 +10,6 @@ IMA ADPCM codec in JavaScript.
 ## Install
 ```
 npm install imaadpcm
-```
-
-## Use
-
-### ES6
-import imaadpcm from **imaadpcm.js**:
-```javascript
-import * as imaadpcm from 'imaadpcm.js';
-let adpcmSamples = imaadpcm.encode(pcmSamples);
-```
-
-### Node
-Require imaadpcm from "imaadpcm":
-```javascript
-const imaadpcm = require("imaadpcm");
-let adpcmSamples = imaadpcm.encode(pcmSamples);
-```
-
-### Browser
-Use the compiled file in the */dist* folder:
-```html
-<script src="imaadpcm.min.js"></script>
-<script>
-    var adpcmSamples = imaadpcm.encode(pcmSamples);
-    pcmSamples = imaadpcm.decode(adpcmSamples);
-    var adpcmBlock = imaadpcm.encodeBlock(pcmBlock);
-    pcmBlock = imaadpcm.decodeBlock(adpcmBlock);
-</script>
-```
-
-Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
-```html
-<script src="https://cdn.jsdelivr.net/npm/imaadpcm"></script>
-```
-
-Or get it from [unpkg](https://www.unpkg.com):
-```html
-<script src="https://unpkg.com/imaadpcm"></script>
-```
-
-Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
-```html
-<script type="module">
-  import * as imaadpcm from 'https://dev.jspm.io/imaadpcm';
-  // ...
-</script>
 ```
 
 ## Examples

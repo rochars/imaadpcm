@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v4.1.0 (2019-09-06)
+- No clicks or time changes when compressing/decompressing
+- Fix: Range error bug when compressing
+
 ## v4.0.1 (2018-07-02)
 - Fix output array size on encode()
 - Removed dev files from the dist

@@ -8,7 +8,7 @@
    * imaadpcm: IMA ADPCM codec in JavaScript.
    * Derived from https://github.com/acida/pyima  
    * Copyright (c) 2016 acida. MIT License.  
-   * Copyright (c) 2018 Rafael da Silva Rocha.
+   * Copyright (c) 2019 Rafael da Silva Rocha.
    *
    * Permission is hereby granted, free of charge, to any person obtaining
    * a copy of this software and associated documentation files (the
@@ -94,7 +94,7 @@
    */
   function encode(samples) {
     /** @type {!Uint8Array} */
-    let adpcmSamples = new Uint8Array((samples.length / 2) + 512);
+    let adpcmSamples = new Uint8Array((samples.length));
     /** @type {!Array<number>} */
     let block = [];
     /** @type {number} */
@@ -107,7 +107,7 @@
       }
       block.push(samples[i]);
     }
-    return adpcmSamples;
+    return adpcmSamples.slice(0, (samples.length/2) + 512);
   }
 
   /**
@@ -125,8 +125,9 @@
     let fileIndex = 0;
     for (let i=0; i<adpcmSamples.length; i++) {
       if (i % blockAlign == 0 && i != 0) {            
-        samples.set(decodeBlock(block), fileIndex);
-        fileIndex += blockAlign * 2;
+        let decoded = decodeBlock(block);
+        samples.set(decoded, fileIndex);
+        fileIndex += decoded.length;
         block = [];
       }
       block.push(adpcmSamples[i]);
@@ -149,9 +150,6 @@
       let sample = encodeSample_(block[i + 1]);
       adpcmSamples.push((sample << 4) | sample2);
     }
-    while (adpcmSamples.length < 256) {
-      adpcmSamples.push(0);
-    }
     return adpcmSamples;
   }
 
@@ -167,7 +165,7 @@
     /** @type {!Array<number>} */
     let result = [
         decoderPredicted_,
-        sign_((block[3] << 8) | block[2])
+        decoderPredicted_
       ];
     for (let i=4; i<block.length; i++) {
       /** @type {number} */

@@ -1,6 +1,6 @@
 {
   "name": "imaadpcm",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "IMA ADPCM codec in JavaScript.",
   "homepage": "https://github.com/rochars/imaadpcm",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
