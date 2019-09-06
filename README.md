@@ -1,5 +1,5 @@
 # imaadpcm
-Copyright (c) 2019 Rafael da Silva Rocha.  
+Copyright (c) 2018-2019 Rafael da Silva Rocha.  
 https://github.com/rochars/imaadpcm
 
 [![NPM version](https://img.shields.io/npm/v/imaadpcm.svg?style=for-the-badge)](https://www.npmjs.com/package/imaadpcm) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/imaadpcm/index.html)  
@@ -88,7 +88,7 @@ https://github.com/acida/pyima
 ## LICENSE
 Derived from https://github.com/acida/pyima  
 Copyright (c) 2016 acida. MIT License.  
-Copyright (c) 2018 Rafael da Silva Rocha.
+Copyright (c) 2018-2019 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
