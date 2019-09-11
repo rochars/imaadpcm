@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v4.1.1 (2019-09-11)
+- Fix: encode() should always return a even number of samples
+
 ## v4.1.0 (2019-09-06)
 - No clicks or time changes when compressing/decompressing
 - Fix: Range error bug when compressing

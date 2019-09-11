@@ -101,7 +101,11 @@ function encode(samples) {
     }
     block.push(samples[i]);
   }
-  return adpcmSamples.slice(0, (samples.length/2) + 512);
+  let samplesLength = (samples.length / 2);
+  if (samplesLength % 2) {
+    samplesLength--;
+  }
+  return adpcmSamples.slice(0, samplesLength + 512);
 }
 
 /**
