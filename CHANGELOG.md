@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v4.1.2 (2019-09-12)
+- Fix: output array in correct size
+
 ## v4.1.1 (2019-09-11)
 - Fix: encode() should always return a even number of samples
 
