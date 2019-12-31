@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 5.0.0 - 2019-12-31
+- New package structure:
+	* dist file is "./dist/imaadpcm.js", a UMD served as "main"
+	* ES6 source is "./index.js", served as "module"
+
 ## v4.1.2 (2019-09-12)
 - Fix: output array in correct size
 
