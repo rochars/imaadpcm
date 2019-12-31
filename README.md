@@ -82,8 +82,8 @@ export function decodeBlock(block) {}
 ```
 
 ## References
-https://github.com/acida/pyima
-http://www.cs.columbia.edu/~hgs/audio/dvi/  
+https://github.com/acida/pyima  
+http://www.cs.columbia.edu/~hgs/audio/dvi/
 
 ## LICENSE
 Copyright (c) 2018-2019 Rafael da Silva Rocha.  
