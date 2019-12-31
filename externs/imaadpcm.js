@@ -29,6 +29,9 @@
  * @externs
  */
 
+// The module name
+var imaadpcm = {};
+
 /**
  * Encode 16-bit PCM samples into 4-bit IMA ADPCM samples.
  * @param {!Int16Array} samples A array of samples.
