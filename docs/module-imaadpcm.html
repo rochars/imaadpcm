@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
     <title>imaadpcm - Documentation</title>
-
+    
+    
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
@@ -11,6 +13,8 @@
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="styles/prettify.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
@@ -21,8 +25,9 @@
 
 <label for="nav-trigger" class="overlay"></label>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-imaadpcm.html">imaadpcm</a><ul class='methods'><li data-type='method'><a href="module-imaadpcm.html#.decode">decode</a></li><li data-type='method'><a href="module-imaadpcm.html#.decodeBlock">decodeBlock</a></li><li data-type='method'><a href="module-imaadpcm.html#.encode">encode</a></li><li data-type='method'><a href="module-imaadpcm.html#.encodeBlock">encodeBlock</a></li></ul></li></ul>
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-imaadpcm.html">imaadpcm</a><ul class='methods'><li data-type='method'><a href="module-imaadpcm.html#~decode">decode</a></li><li data-type='method'><a href="module-imaadpcm.html#~decodeBlock">decodeBlock</a></li><li data-type='method'><a href="module-imaadpcm.html#~encode">encode</a></li><li data-type='method'><a href="module-imaadpcm.html#~encodeBlock">encodeBlock</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -44,18 +49,22 @@
 </header>
 
 <article>
-    <div class="container-overview">
     
+        <div class="container-overview">
         
+            
 
+            
         
-    
-    </div>
-
+        </div>
     
 
     
 
+    
+
+    
+    
     
 
      
@@ -72,7 +81,7 @@
 
     
 
-    <h4 class="name" id=".decode"><span class="type-signature">(static) </span>decode<span class="signature">(adpcmSamples<span class="signature-attributes">non-null</span>, blockAlign)</span><span class="type-signature"> &rarr; (non-null) {Int16Array}</span></h4>
+    <h4 class="name" id="~decode"><span class="type-signature">(inner) </span>decode<span class="signature">(adpcmSamples<span class="signature-attributes">non-null</span>, blockAlign)</span><span class="type-signature"> &rarr; (non-null) {Int16Array}</span></h4>
 
     
 
@@ -84,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line125">line 125</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line124">line 124</a>
     </li></ul></dd>
     
 
@@ -152,6 +161,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -177,6 +188,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">A array of ADPCM samples.</td>
         </tr>
@@ -200,6 +215,12 @@
             
 
             
+                <td class="default">
+                
+                    <code>256</code>
+                
+                </td>
+            
 
             <td class="description last">The block size.</td>
         </tr>
@@ -207,6 +228,8 @@
     
     </tbody>
 </table>
+
+
 
 
 
@@ -241,12 +264,13 @@
     
 
 
+
         
             
 
     
 
-    <h4 class="name" id=".decodeBlock"><span class="type-signature">(static) </span>decodeBlock<span class="signature">(block<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="~decodeBlock"><span class="type-signature">(inner) </span>decodeBlock<span class="signature">(block<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -258,7 +282,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line167">line 167</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line166">line 166</a>
     </li></ul></dd>
     
 
@@ -372,6 +396,8 @@
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -392,12 +418,13 @@
     
 
 
+
         
             
 
     
 
-    <h4 class="name" id=".encode"><span class="type-signature">(static) </span>encode<span class="signature">(samples<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Uint8Array}</span></h4>
+    <h4 class="name" id="~encode"><span class="type-signature">(inner) </span>encode<span class="signature">(samples<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Uint8Array}</span></h4>
 
     
 
@@ -409,7 +436,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line94">line 94</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line93">line 93</a>
     </li></ul></dd>
     
 
@@ -523,6 +550,8 @@
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -543,12 +572,13 @@
     
 
 
+
         
             
 
     
 
-    <h4 class="name" id=".encodeBlock"><span class="type-signature">(static) </span>encodeBlock<span class="signature">(block<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="~encodeBlock"><span class="type-signature">(inner) </span>encodeBlock<span class="signature">(block<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -560,7 +590,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line149">line 149</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -674,6 +704,8 @@
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -694,6 +726,7 @@
     
 
 
+
         
     
 
@@ -707,15 +740,21 @@
 
 
 
+    
+    
 </div>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 12 2019 05:22:42 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
 <script src="scripts/linenumber.js"></script>
+
+
+
 </body>
 </html>

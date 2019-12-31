@@ -1,8 +1,7 @@
 /*
  * imaadpcm: IMA ADPCM codec in JavaScript.
- * Derived from https://github.com/acida/pyima  
- * Copyright (c) 2016 acida. MIT License.  
  * Copyright (c) 2018-2019 Rafael da Silva Rocha.
+ * Copyright (c) 2016 acida. MIT License.  
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -91,7 +90,7 @@ let decoderStep_ = 7;
  * @param {!Int16Array} samples A array of samples.
  * @return {!Uint8Array}
  */
-export function encode(samples) {
+function encode(samples) {
   /** @type {!Uint8Array} */
   let adpcmSamples = new Uint8Array((samples.length));
   /** @type {!Array<number>} */
@@ -122,7 +121,7 @@ export function encode(samples) {
  * @param {number} blockAlign The block size.
  * @return {!Int16Array}
  */
-export function decode(adpcmSamples, blockAlign=256) {
+function decode(adpcmSamples, blockAlign=256) {
   /** @type {!Int16Array} */
   let samples = new Int16Array(adpcmSamples.length * 2);
   /** @type {!Array<number>} */
@@ -146,7 +145,7 @@ export function decode(adpcmSamples, blockAlign=256) {
  * @param {!Array<number>} block A sample block of 505 samples.
  * @return {!Array<number>}
  */
-export function encodeBlock(block) {
+function encodeBlock(block) {
   /** @type {!Array<number>} */
   let adpcmSamples = blockHead_(block[0]);
   for (let i=3; i<block.length; i+=2) {
@@ -164,7 +163,7 @@ export function encodeBlock(block) {
  * @param {!Array<number>} block A adpcm sample block.
  * @return {!Array<number>}
  */
-export function decodeBlock(block) {
+function decodeBlock(block) {
   decoderPredicted_ = sign_((block[1] << 8) | block[0]);
   decoderIndex_ = block[2];
   decoderStep_ = STEP_TABLE[decoderIndex_];
@@ -326,3 +325,5 @@ function blockHead_(sample) {
   adpcmSamples.push(0);
   return adpcmSamples;
 }
+
+export { encode, decode, encodeBlock, decodeBlock };

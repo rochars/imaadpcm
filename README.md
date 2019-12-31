@@ -82,13 +82,12 @@ export function decodeBlock(block) {}
 ```
 
 ## References
-http://www.cs.columbia.edu/~hgs/audio/dvi/  
 https://github.com/acida/pyima
+http://www.cs.columbia.edu/~hgs/audio/dvi/  
 
 ## LICENSE
-Derived from https://github.com/acida/pyima  
-Copyright (c) 2016 acida. MIT License.  
-Copyright (c) 2018-2019 Rafael da Silva Rocha.
+Copyright (c) 2018-2019 Rafael da Silva Rocha.  
+Copyright (c) 2016 acida. MIT License.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

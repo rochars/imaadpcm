@@ -4,12 +4,13 @@
  * 
  */
 
-var assert = require('assert');
+var imaadpcm = imaadpcm || require("../../test/loader.js");
+var assert = assert || require('assert');
 
 describe('decode', function() {
-    const imaadpcm = require("../test/loader.js");
-    let block = [];
-    for (let i=0; i<2000; i++) {
+    
+    var block = [];
+    for (var i=0; i<2000; i++) {
     	block.push(Math.floor(Math.random()*255) + 1);
     }
 
